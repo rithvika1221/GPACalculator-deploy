@@ -2,6 +2,33 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
+export interface Course {
+  courseName: string;
+  courseGrade: string;
+  courseCredit: number;
+  courseType: string;
+}
+
+export interface Semester {
+  semesterName: string;
+  semesterId: number;
+  semesterUnweightedGPA: number;
+  semesterWeightedGPA: number;
+  course: Course[];
+}
+
+export interface Student {
+  studentName: string;
+  studentPassword: string;
+  studentWeightedGPA: number;
+  studentUnweightedGPA: number;
+  semester: Semester[];
+}
+
+
+
+
+// old data this is not needed need to delete it.
 export type User = {
   id: string;
   name: string;
@@ -86,3 +113,6 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+
+
