@@ -81,15 +81,25 @@ const gpa = calculateGPA(semester);
   return (
     <div className="accordion-item">
       <button className="accordion-title" onClick={toggleOpen}>
-        <h1 className="mb-4 text-2xl font-extrabold text-gray-900 md:text-5xl lg:text-2xl">
+        <h1 className="mb-4 text-2xl font-bold text-gray-900 md:text-5xl lg:text-2xl">
           {semesterDisplayName}
         </h1>
       </button>
-      <div className='right-0'>
-        <h1 className="mb-4 text-xl font-extrabold text-gray-900 md:text-xl lg:text-xl">
-          GPA: {semester.semUnweightedGPA}
-        </h1>
-      </div>
+
+<div className="flex justify-between"> {/* This will spread the child divs apart */}
+  <div>
+    <h1 className="text-xl font-bold text-gray-900 md:text-xl lg:text-xl">
+      Unweighted GPA: {semester?.semUnweightedGPA ? semester.semUnweightedGPA.toFixed(2) : 'N/A'} 
+    </h1>
+  </div>
+  <div>
+    <h1 className="text-xl font-bold text-gray-900 md:text-xl lg:text-xl">
+      Weighted GPA: {semester?.semWeightedGPA ? semester.semWeightedGPA.toFixed(2) : 'N/A'} 
+    </h1>
+  </div>
+</div>
+
+
       {isOpen && (
         <div className="accordion-content">
           <table>

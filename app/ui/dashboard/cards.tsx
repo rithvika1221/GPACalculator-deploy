@@ -12,12 +12,7 @@ const iconMap = {
 };
 
 export default async function CardWrapper() {
-
-
   var students = await getStudentData("1");
-
-
-
   return (
     <>
       {/* NOTE: comment in this code when you get to this point in the course */}
@@ -42,18 +37,16 @@ export function Card({
     <div className="rounded-xl bg-gray-600  shadow-sm h-20">
       <div className="flex p-4 h-10">
         {Icon ? <Icon className="h-5 w-5 text-gray-700" /> : null}
-        <h3 className="ml-2 text-sm font-medium">{title}</h3>
+
+        <h1 className="text-xl font-bold text-gray-900 md:text-xl lg:text-xl">{title}: {value}</h1>
       </div>
 
 
-      <div className='h-10'>
-        <p
-          className={`${lusitana.className}
-          truncate rounded-xl bg-gray-100 px-4 py-4 text-center text-3xl`}
-        >
+      {/* <div className='h-10'>
+        <h1 className="text-center text-xl font-extrabold text-gray-900 md:text-xl lg:text-xl">
           {value}
-        </p>
-      </div>
+        </h1>
+      </div> */}
     </div>
   );
 }
