@@ -20,42 +20,141 @@ import { useState, useEffect } from 'react';
 
 const apiEndpoint = 'http://localhost:8085/students'; 
 
-
-export async function getStudentData()
-{
-
+export async function getStudentData(id: string) {
   try {
-    const studentResponse = await fetch('http://localhost:8085/students/8');
+    const studentResponse = await fetch(`http://localhost:8085/students/${id}`);
     if (!studentResponse.ok) {
       throw new Error(`Error: ${studentResponse.status}`);
     }
+    const studentData = await studentResponse.json();
 
- const studentData = await studentResponse.json();
+    const semesterResponse = await fetch(`http://localhost:8085/students/${id}/semesters`);
+    if (!semesterResponse.ok) {
+      throw new Error(`Error: ${semesterResponse.status}`);
+    }
+    const semesterData = await semesterResponse.json();
+    studentData.semester = semesterData;
 
- const semesterResponse = await fetch('http://localhost:8085/students/8/semesters');
- if (!semesterResponse.ok) {
-   throw new Error(`Error: ${semesterResponse.status}`);
- }
- const semesteData = await semesterResponse.json();
- studentData.semester = semesteData;
-
-// For each semester, fetch its courses
-for (const semester of semesteData) {
-  
-  var courseResponse = await fetch('http://localhost:8085/students/8/semesters/16/courses');
-  if (!courseResponse.ok) {
-    throw new Error(`Error: ${courseResponse.status}`);
-  }
-  semester.course = await courseResponse.json();
-}
+    // For each semester, fetch its courses
+    for (const semester of semesterData) {
+      const courseResponse = await fetch(`http://localhost:8085/students/${id}/semesters/${semester.semesterId}/courses`);
+      if (!courseResponse.ok) {
+        throw new Error(`Error: ${courseResponse.status}`);
+      }
+      semester.course = await courseResponse.json();
+    }
 
     return studentData;
   } catch (error) {
     console.error('Fetch error:', error);
   }
+}
+
+
+export async function saveStudentData(student: Student) {
+  try {
+      // Determine if the student already exists
+      // This requires a student ID or unique identifier in the Student object
+      const studentMethod = student.studentId ? 'PUT' : 'POST';
+      const studentUrl = student.studentId 
+          ? `http://localhost:8085/students/${student.studentId}` 
+          : 'http://localhost:8085/students';
+
+      const studentResponse = await fetch(studentUrl, {
+          method: studentMethod,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(student)
+      });
+
+      if (!studentResponse.ok) {
+          throw new Error(`Error: ${studentResponse.status}`);
+      }
+
+      const savedStudent = await studentResponse.json();
+
+      for (const semester of student.semester) {
+          const semesterMethod = semester.semesterId ? 'PUT' : 'POST';
+          const semesterUrl = semester.semesterId 
+              ? `http://localhost:8085/students/${savedStudent.studentId}/semesters/${semester.semesterId}` 
+              : `http://localhost:8085/students/${savedStudent.studentId}/semesters`;
+
+          const semesterResponse = await fetch(semesterUrl, {
+              method: semesterMethod,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(semester)
+          });
+
+          if (!semesterResponse.ok) {
+              throw new Error(`Error: ${semesterResponse.status}`);
+          }
+
+          const savedSemester = await semesterResponse.json();
+
+          for (const course of semester.course) {
+              const courseMethod = course.courseId ? 'PUT' : 'POST';
+              const courseUrl = course.courseId 
+                  ? `http://localhost:8085/students/${savedStudent.studentId}/semesters/${savedSemester.semesterId}/courses/${course.courseId}` 
+                  : `http://localhost:8085/students/${savedStudent.studentId}/semesters/${savedSemester.semesterId}/courses`;
+
+              const courseResponse = await fetch(courseUrl, {
+                  method: courseMethod,
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(course)
+              });
+
+              if (!courseResponse.ok) {
+                  throw new Error(`Error: ${courseResponse.status}`);
+              }
+
+              await courseResponse.json(); // Assuming you might want to do something with this response
+          }
+      }
+
+      return savedStudent; // or some other response as needed
+  } catch (error) {
+      console.error('Fetch error:', error);
+      throw error; // Re-throwing the error is important for caller awareness
+  }
+}
+
+
+
+// Delete this code
+// export async function getStudentData(id:string)
+// {
+
+//   try {
+//     const studentResponse = await fetch('http://localhost:8085/students/${id}');
+//     if (!studentResponse.ok) {
+//       throw new Error(`Error: ${studentResponse.status}`);
+//     }
+
+//  const studentData = await studentResponse.json();
+
+//  const semesterResponse = await fetch('http://localhost:8085/students/${id}/semesters');
+//  if (!semesterResponse.ok) {
+//    throw new Error(`Error: ${semesterResponse.status}`);
+//  }
+//  const semesteData = await semesterResponse.json();
+//  studentData.semester = semesteData;
+
+// // For each semester, fetch its courses
+// for (const semester of semesteData) {
+  
+//   var courseResponse = await fetch('http://localhost:8085/students/${id}/semesters/${semester.id}/courses');
+//   if (!courseResponse.ok) {
+//     throw new Error(`Error: ${courseResponse.status}`);
+//   }
+//   semester.course = await courseResponse.json();
+// }
+
+//     return studentData;
+//   } catch (error) {
+//     console.error('Fetch error:', error);
+//   }
    
  
-}
+// }
 
 export async function getServerSideProps() {
   try {
@@ -77,7 +176,7 @@ export async function getServerSideProps() {
 
 export async function fetchStudentData() {
   try {
-    const response = await fetch('http://localhost:8085/students/8');
+    const response = await fetch('http://localhost:8085/students/1');
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }

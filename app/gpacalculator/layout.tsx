@@ -6,7 +6,7 @@ import AcmeLogo from '../ui/acme-logo';
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div> <div className="mb-2 flex h-14 items-end justify-start rounded-md bg-cyan-700  md:0"   >
+      <div> <div className="mb-2 flex h-14 items-end justify-start rounded-md bg-gray-700  md:0"   >
 
         <div className="w-32 text-white md:w-80 md:h-0 absolute left-0 p-7">
           <AcmeLogo />

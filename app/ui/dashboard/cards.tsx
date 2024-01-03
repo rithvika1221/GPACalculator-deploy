@@ -3,7 +3,7 @@ import {
   AcademicCapIcon
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-import { fetchStudentData } from '@/app/lib/data';
+import { fetchStudentData, getStudentData } from '@/app/lib/data';
 import { Divider } from '@nextui-org/react';
 
 const iconMap = {
@@ -14,7 +14,7 @@ const iconMap = {
 export default async function CardWrapper() {
 
 
-  var students = await fetchStudentData();
+  var students = await getStudentData("1");
 
 
 
@@ -39,7 +39,7 @@ export function Card({
   const Icon = iconMap[type];
 
   return (
-    <div className="rounded-xl bg-cyan-500  shadow-sm h-20">
+    <div className="rounded-xl bg-gray-600  shadow-sm h-20">
       <div className="flex p-4 h-10">
         {Icon ? <Icon className="h-5 w-5 text-gray-700" /> : null}
         <h3 className="ml-2 text-sm font-medium">{title}</h3>

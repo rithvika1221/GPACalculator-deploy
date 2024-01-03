@@ -14,13 +14,13 @@ import { usePathname } from 'next/navigation';
 // Depending on the size of the application, this would be stored in a database.
 const links = [
   {
-    name: 'GPA Calculator', href: '/dashboard', icon: HomeIcon
+    name: 'GPA Calculator', href: '/gpacalculator', icon: HomeIcon
   },
   {
-    name: 'Settings', href: '/dashboard/settings', icon: Cog8ToothIcon,
+    name: 'Settings', href: '/gpacalculator/settings', icon: Cog8ToothIcon,
   },
   {
-    name: 'Help', href: '/dashboard/help', icon: InformationCircleIcon,
+    name: 'Help', href: '/gpacalculator/help', icon: InformationCircleIcon,
   }
 ];
 
@@ -36,9 +36,9 @@ export default function NavLinks() {
             key={link.name}
             href={link.href}
             className={clsx(
-              'flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-cyan-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3',
+              'flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-gray-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3',
               {
-                'bg-cyan-100 text-blue-600': pathname === link.href,
+                'bg-gray-100 text-blue-600': pathname === link.href,
               },
             )}
 
