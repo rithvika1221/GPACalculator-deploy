@@ -2,9 +2,7 @@
 import {
   AcademicCapIcon
 } from '@heroicons/react/24/outline';
-import { lusitana } from '@/app/ui/fonts';
-import { fetchStudentData, getStudentData } from '@/app/lib/data';
-import { Divider } from '@nextui-org/react';
+import { getStudentData } from '@/app/lib/data';
 
 const iconMap = {
   weighted: AcademicCapIcon,

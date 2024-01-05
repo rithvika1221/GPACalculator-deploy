@@ -8,13 +8,12 @@ import { auth } from "@/auth"
 export default async function SideNav() {
   const { user } = await auth();
   return (
-    <div className="flex h-full flex-col px-3 py-4 md:px-2">
+    <div className="flex h-auto flex-col px-3 py-4 md:px-2">
 
     
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks param={user?.id}></NavLinks>
-        <div className="hidden h-auto w-full grow rounded-md bg-blue-50 md:block"></div>
-        Hello
+        <div className="hidden  w-full grow rounded-md bg-blue-50 md:block"></div>
         <form
           action={async () => {
             'use server';
@@ -26,7 +25,6 @@ export default async function SideNav() {
             <div className="hidden md:block">Sign Out</div>
           </button>
         </form>
-        Bye
       </div>
     </div>
   );

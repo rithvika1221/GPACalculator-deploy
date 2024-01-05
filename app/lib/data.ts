@@ -50,11 +50,9 @@ export async function getStudentData(id: string) {
   }
 }
 
-
-export async function saveStudentData(student: Student) {
+export async function saveStudentData(student:Student) {
   try {
       // Determine if the student already exists
-      // This requires a student ID or unique identifier in the Student object
       const studentMethod = student.studentId ? 'PUT' : 'POST';
       const studentUrl = student.studentId 
           ? `http://localhost:8085/students/${student.studentId}` 
@@ -71,6 +69,25 @@ export async function saveStudentData(student: Student) {
       }
 
       const savedStudent = await studentResponse.json();
+
+      // Fetch existing semesters for the student
+      const existingSemesters = await fetch(`http://localhost:8085/students/${savedStudent.studentId}/semesters`).then((response) => response.json());
+      
+
+      // Delete semesters that no longer exist
+      for (const existingSemester of existingSemesters) {
+          if (!student.semester.some(s => s.semesterId === existingSemester.semesterId)) {
+
+            const responseCoursses =  await fetch(`http://localhost:8085/students/${savedStudent.studentId}/semesters/${existingSemester.semesterId}/courses`, {
+              method: 'DELETE'
+          });
+              const response =  await fetch(`http://localhost:8085/students/${savedStudent.studentId}/semesters/${existingSemester.semesterId}`, {
+                  method: 'DELETE'
+              });
+          }
+      }
+
+
 
       for (const semester of student.semester) {
           const semesterMethod = semester.semesterId ? 'PUT' : 'POST';
@@ -90,6 +107,19 @@ export async function saveStudentData(student: Student) {
 
           const savedSemester = await semesterResponse.json();
 
+          // Fetch existing courses for the semester
+          const existingCourses = await fetch(`http://localhost:8085/students/${savedStudent.studentId}/semesters/${savedSemester.semesterId}/courses`).then((response) => response.json());
+      
+
+          // Delete courses that no longer exist
+          for (const existingCourse of existingCourses) {
+              if (!semester.course.some(c => c.courseId === existingCourse.courseId)) {
+                  await fetch(`http://localhost:8085/students/${savedStudent.studentId}/semesters/${savedSemester.semesterId}/courses/${existingCourse.courseId}`, {
+                      method: 'DELETE'
+                  });
+              }
+          }
+
           for (const course of semester.course) {
               const courseMethod = course.courseId ? 'PUT' : 'POST';
               const courseUrl = course.courseId 
@@ -106,54 +136,62 @@ export async function saveStudentData(student: Student) {
                   throw new Error(`Error: ${courseResponse.status}`);
               }
 
-              await courseResponse.json(); // Assuming you might want to do something with this response
+              await courseResponse.json(); // Optionally handle this response
           }
       }
 
       return savedStudent; // or some other response as needed
   } catch (error) {
       console.error('Fetch error:', error);
-      throw error; // Re-throwing the error is important for caller awareness
+      throw error;
   }
 }
 
 
-// Delete this code
-// export async function getStudentData(id:string)
-// {
 
-//   try {
-//     const studentResponse = await fetch('http://localhost:8085/students/${id}');
-//     if (!studentResponse.ok) {
-//       throw new Error(`Error: ${studentResponse.status}`);
-//     }
+export async function fetchStudent() {
+  try {
+    const response = await fetch('http://localhost:8085/students/1');
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+}
 
-//  const studentData = await studentResponse.json();
+export async function fetchStudentByEamil(email: string): Promise<User | undefined> {
+  try {
+    const response = await fetch(`http://localhost:8085/students?$filter=email eq '${email}'`);
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const studentData: Student[]= await response.json();
 
-//  const semesterResponse = await fetch('http://localhost:8085/students/${id}/semesters');
-//  if (!semesterResponse.ok) {
-//    throw new Error(`Error: ${semesterResponse.status}`);
-//  }
-//  const semesteData = await semesterResponse.json();
-//  studentData.semester = semesteData;
-
-// // For each semester, fetch its courses
-// for (const semester of semesteData) {
+    if (!studentData || studentData.length === 0) {
+      console.error('Student data array is empty or undefined');
+      return;
+  }
   
-//   var courseResponse = await fetch('http://localhost:8085/students/${id}/semesters/${semester.id}/courses');
-//   if (!courseResponse.ok) {
-//     throw new Error(`Error: ${courseResponse.status}`);
-//   }
-//   semester.course = await courseResponse.json();
-// }
+  const firstStudent = studentData[0]; // Accessing the first element of the array
+  
+  const userData: User = {
+      id: firstStudent.studentId.toString(),
+      name: firstStudent.studentName,
+      email: firstStudent.studentEmail,
+      password: firstStudent.studentPassword,
+      // Map other fields as necessary
+  };
 
-//     return studentData;
-//   } catch (error) {
-//     console.error('Fetch error:', error);
-//   }
-   
- 
-// }
+
+    return userData;
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+}
+
 
 export async function getServerSideProps() {
   try {
@@ -172,43 +210,6 @@ export async function getServerSideProps() {
     console.error('runtime error: ', error);
   }
 }
-
-export async function fetchStudent() {
-  try {
-    const response = await fetch('http://localhost:8085/students/1');
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Fetch error:', error);
-  }
-}
-
-export async function fetchStudentByName(name: string): Promise<User | undefined> {
-  try {
-    const response = await fetch('http://localhost:8085/students/1');
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-    const studentData: Student = await response.json();
-
-    // Map Student data to User structure
-    const userData: User = {
-      id: studentData.studentId.toString(),
-      name: studentData.studentName,
-      email: studentData.studentEmail,
-      password: studentData.studentPassword,
-      // Map other fields as necessary
-    };
-
-    return userData;
-  } catch (error) {
-    console.error('Fetch error:', error);
-  }
-}
-
 export async function postStudentData(studentData: Student) {
   try {
     const response = await fetch(apiEndpoint, {

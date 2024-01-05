@@ -11,8 +11,9 @@ const AccordionItem = dynamic(() => import('./0accordion-item'), { ssr: false })
 interface AccordionProps {
   student: Student;
   onStudentUpdate: (updatedStudent: Student) => void;
+  saveStudentUpdate: (updatedStudent: Student) => void;
 }
-const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate }) => {
+const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate, saveStudentUpdate }) => {
   const [semesters, setSemesters] = useState<Semester[]>(student.semester);
   const [error, setError] = useState(''); // State for error message
 
@@ -23,12 +24,19 @@ const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate }) => {
     setSemesters(updatedStudent.semester);
 };
 
+const saveStudent = () => {
+  const updatedStudent = { ...student, semester: [...student.semester] };
+  saveStudentUpdate(updatedStudent);
+
+};
+
   const handleAddSemester = () => {
     if (semesters.length < 8) { // Check if the number of semesters is less than 8
       // Define a default course with empty or initial values
       const defaultCourse = { courseName: '', courseGrade: '', courseCredit: '', courseType: '' };
+      const newCourse = { courseName: '', courseGrade: 'A', courseCredit: '1', courseType: 'Regular' };
       // Create a new semester with the default course
-      const newSemester = { course: [defaultCourse] };
+      const newSemester = { semesterName:"", semUnweightedGPA:0, semWeightedGPA:0, course: [newCourse] };
       setSemesters([...semesters, newSemester]);
       setError(''); // Reset any error message
     } else {
@@ -41,11 +49,13 @@ const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate }) => {
     console.log(student);
     const updatedSemesters = semesters.filter((_, semesterIndex) => semesterIndex !== index);
     setSemesters(updatedSemesters);
+    const updatedStudent = { ...student, semester: updatedSemesters };
+    onStudentUpdate(updatedStudent);
     console.log(student);
   };
 
   return (
-    <div className='rounded-t-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-blue-400 w-2/3'>
+    <div className='rounded-t-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-blue-100  text-black w-2/3'>
       {error && <p className="text-red-500">{error}</p>} {/* Display error message if it exists */}
     
       {semesters.map((semester, index) => (
@@ -67,20 +77,21 @@ const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate }) => {
         
            <button
             type="button"
-            className="mt-4 bg-blue-500 text-white border border-white rounded-lg h-10 py-1 px-px w-48"
+            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-px w-48"
             onClick={handleAddSemester}>
-              <PlusIcon className='bg-blue-500 text-white h-5 w-5 -my-3'></PlusIcon>
+              <PlusIcon className='bg-blue-100 text-black h-5 w-5 -my-3'></PlusIcon>
             <p className='-m-5'>Add Semester</p>
            
           </button> 
           <button
             type="button"
-            className="mt-4 bg-blue-500 text-white border border-white rounded-lg h-10 py-1 px-px w-48"
-            onClick={handleAddSemester}>
-              <CircleStackIcon className='bg-blue-500 text-white h-5 w-5 -my-3'></CircleStackIcon>
+            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-px w-48"
+            onClick={saveStudent}>
+              <CircleStackIcon className='bg-blue-100 text-black h-5 w-5 -my-3'></CircleStackIcon>
             <p className='-m-5'>Save Data</p>
            
           </button> 
+         
           
         </div>
       </div>

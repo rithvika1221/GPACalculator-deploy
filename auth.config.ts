@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { fetchStudentByName } from './app/lib/data';
+import { fetchStudentByEamil } from './app/lib/data';
 import type { NextAuthConfig } from 'next-auth';
  
 export const authConfig = {
@@ -11,7 +11,7 @@ export const authConfig = {
   callbacks: {
     async session({ session, token }) {
       if (token.email) {
-        const userDetails = await fetchStudentByName(token.email);
+        const userDetails = await fetchStudentByEamil(token.email);
         if (userDetails) {
           // Here, you can add additional user details to the session
           session.user.id = userDetails.id;
@@ -29,11 +29,11 @@ export const authConfig = {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        var email = "";
-        email = auth?.user?.email || "";
-        const user =  await fetchStudentByName(email);
-        const userId = user?.id;
-        return Response.redirect(new URL(`/gpacalculator/${userId}`, nextUrl));
+        // var email = "";
+        // email = auth?.user?.email || "";
+        // const user =  await fetchStudentByName(email);
+        // const userId = user?.id;
+        return Response.redirect(new URL(`/gpacalculator/${auth.user?.id}`, nextUrl));
 ;
       }
       return true;
