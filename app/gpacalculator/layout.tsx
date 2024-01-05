@@ -1,25 +1,35 @@
 import SideNav from '@/app/ui/dashboard/sidenav';
 import { Providers } from "@/app/providers";
-import { Link, User } from '@nextui-org/react';
+import { User } from '@nextui-org/react';
 import AcmeLogo from '../ui/acme-logo';
+import { auth } from '@/auth';
+import { getSession, useSession } from 'next-auth/react';
+import Page from '../page';
+import { StudentProvider } from './studentContext';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+
+export default async function Layout({ children}: { children: React.ReactNode }) {
+
+  const { user } = await auth();
+
+ 
+
+    const userData = {
+      name: "John Doe",
+      age: 30,
+    };
+
   return (
+
     <>
-      <div> <div className="mb-2 flex h-14 items-end justify-start rounded-md bg-gray-700  md:0"   >
+
+
+      <div> <div className="mb-2 flex h-14 items-end justify-start rounded-md bg-blue-500 md:0"   >
 
         <div className="w-32 text-white md:w-80 md:h-0 absolute left-0 p-7">
           <AcmeLogo />
         </div >
-        <div className='absolute right-0'>
-          <User
-          name="Jane Doe"
-          description="Product Designer"
-          avatarProps={{
-            src: "https://i.pravatar.cc/150?u=a04258114e29026702d"
-          }}
-        />
-        </div>
+       
 
       </div>
 
@@ -29,7 +39,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <SideNav />
         </div>
         <div className="flex-grow  md:overflow-y-auto md:p-4">
-          <Providers>{children}</Providers>
+       
+  <StudentProvider>{children}</StudentProvider>
+         
+
+       
         </div>
       </div>
     </>

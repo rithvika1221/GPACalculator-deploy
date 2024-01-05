@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { Semester, Course, Grade, gradePoints } from '@/app/lib/definitions';
+import { Button } from '@nextui-org/react';
 
 interface AccordionItemProps {
   semester: Semester;
@@ -81,19 +82,19 @@ const gpa = calculateGPA(semester);
   return (
     <div className="accordion-item">
       <button className="accordion-title" onClick={toggleOpen}>
-        <h1 className="mb-4 text-2xl font-bold text-gray-900 md:text-5xl lg:text-2xl">
+        <h1 className="mb-4 text-xl font-bold text-white ">
           {semesterDisplayName}
         </h1>
       </button>
 
 <div className="flex justify-between"> {/* This will spread the child divs apart */}
   <div>
-    <h1 className="text-xl font-bold text-gray-900 md:text-xl lg:text-xl">
+    <h1 className="text-xl  text-white md:text-xl lg:text-xl">
       Unweighted GPA: {semester?.semUnweightedGPA ? semester.semUnweightedGPA.toFixed(2) : 'N/A'} 
     </h1>
   </div>
   <div>
-    <h1 className="text-xl font-bold text-gray-900 md:text-xl lg:text-xl">
+    <h1 className="text-xl  text-white md:text-xl lg:text-xl">
       Weighted GPA: {semester?.semWeightedGPA ? semester.semWeightedGPA.toFixed(2) : 'N/A'} 
     </h1>
   </div>
@@ -101,17 +102,17 @@ const gpa = calculateGPA(semester);
 
 
       {isOpen && (
-        <div className="accordion-content">
+        <div className="text-xl  text-white md:text-xl lg:text-xl">
           <table>
             <thead>
-              <tr>
+              <tr className='text-white'>
                 <th>Course Name</th>
                 <th>Grade</th>
                 <th>Credit</th>
                 <th>Type</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className='text-black'>
               {semester.course.map((course, index) => (
                 <tr key={index}>
                   <td>
@@ -164,16 +165,22 @@ const gpa = calculateGPA(semester);
             </tbody>
           </table>
           <div>  
-          <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-200
-           hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 
-          dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+          <Button className="mt-4 bg-blue-500 text-white border border-white"  onClick={handleAddCourse}>
+      Add Course
+    </Button>
+    <Button className="mt-4 bg-blue-500 text-white border border-white"  onClick={deleteSemester}>
+      Delete Semester
+    </Button>
+          {/* <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-200
+           hover:bg-blue-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 
+          dark:focus:ring-gray-700 dark:bg-blue-500 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-blue-500"
           onClick={handleAddCourse}>
             Add Course</button>
              <button type="button" className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-200
-           hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 
-          dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+           hover:bg-blue-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 
+          dark:focus:ring-gray-700 dark:bg-blue-500 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-blue-500"
           onClick={deleteSemester}>
-            Delete Semester</button>
+            Delete Semester</button> */}
           </div>
         </div>
       )}

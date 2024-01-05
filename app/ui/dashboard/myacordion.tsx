@@ -53,7 +53,7 @@ export default async function MyAccordion({ items }: { items: Array<Semester> })
   
 
     
-  //   <ul className="accordion rounded-xl bg-gray-100 px-4 py-4 text-center text-3xl"  >
+  //   <ul className="accordion rounded-xl bg-blue-100 px-4 py-4 text-center text-3xl"  >
   //   {items.map((item, idx) => (
   //     <MyAccordionItem
   //       key={idx}

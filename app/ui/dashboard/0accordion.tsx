@@ -2,7 +2,11 @@
 import React, { useState } from 'react';
 import { Student, Semester } from '@/app/lib/definitions';
 import dynamic from 'next/dynamic';
-import { Divider } from '@nextui-org/react';
+import { Button, Divider } from '@nextui-org/react';
+import { PlusIcon, CircleStackIcon } from '@heroicons/react/24/outline';
+
+import { MdNewLabel } from "react-icons/md";
+
 const AccordionItem = dynamic(() => import('./0accordion-item'), { ssr: false });
 interface AccordionProps {
   student: Student;
@@ -41,11 +45,13 @@ const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate }) => {
   };
 
   return (
-    <div className='rounded-t-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-gray-200 w-2/3'>
+    <div className='rounded-t-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-blue-400 w-2/3'>
       {error && <p className="text-red-500">{error}</p>} {/* Display error message if it exists */}
+    
       {semesters.map((semester, index) => (
         <React.Fragment key={index}>
-          <div className="mb-4 border-5 border-gray-300 rounded-lg overflow-hidden">
+          
+          <div className="mb-4 border-5 border-white rounded-lg overflow-hidden">
             <AccordionItem
               semester={semester}
               semesterNumber={index + 1}
@@ -56,20 +62,31 @@ const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate }) => {
           {index < semesters.length - 1 && <Divider className="my-4" />}
         </React.Fragment>
       ))}
-      <div className='py-6'>
-        <div>
+        <div >
+        <div >
+        
+           <button
+            type="button"
+            className="mt-4 bg-blue-500 text-white border border-white rounded-lg h-10 py-1 px-px w-48"
+            onClick={handleAddSemester}>
+              <PlusIcon className='bg-blue-500 text-white h-5 w-5 -my-3'></PlusIcon>
+            <p className='-m-5'>Add Semester</p>
+           
+          </button> 
           <button
             type="button"
-            className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-800 focus:outline-none bg-white rounded-lg border border-gray-200
-             hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 
-            dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-            onClick={handleAddSemester}
-          >
-            Add Semester
-          </button>
+            className="mt-4 bg-blue-500 text-white border border-white rounded-lg h-10 py-1 px-px w-48"
+            onClick={handleAddSemester}>
+              <CircleStackIcon className='bg-blue-500 text-white h-5 w-5 -my-3'></CircleStackIcon>
+            <p className='-m-5'>Save Data</p>
+           
+          </button> 
+          
         </div>
       </div>
+     
     </div>
+    
   );
 };
 export default Accordion;

@@ -30,6 +30,7 @@ export interface Semester {
 export interface Student {
   studentId:number;
   studentName: string;
+  studentEmail:string;
   studentPassword: string;
   studentWeightedGPA: number;
   studentUnweightedGPA: number;

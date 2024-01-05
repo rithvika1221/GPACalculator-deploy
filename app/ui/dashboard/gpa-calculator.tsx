@@ -59,7 +59,7 @@ import MyAccordionApp from "./myaccordion-app";
       <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
        Semesters
       </h2>
-      <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4">
+      <div className="flex grow flex-col justify-between rounded-xl bg-blue-50 p-4">
         {/* NOTE: comment in this code when you get to this point in the course */}
         <div>
         <h1>Student Name: {students.studentName}</h1>

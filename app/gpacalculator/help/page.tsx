@@ -1,13 +1,6 @@
-
-
-
 export default  function Page() {
     
-
-
-
     return (
-
         <main className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
         <section className="mb-6">
             <h1 className="text-xl font-bold mb-4">What is GPA?</h1>
@@ -16,21 +9,18 @@ export default  function Page() {
                 It typically ranges from 0.0 to 4.0, where each letter grade corresponds to a numerical value. For instance, an A or A+ is generally equivalent to 4.0, an A- to 3.7. The scale can extend beyond 4.0 in some cases, like an A+ being valued at 4.3 in certain school districts.
             </p>
         </section>
-
         <section className="mb-6">
             <h2 className="text-lg font-semibold mb-3">Why is GPA Important?</h2>
             <p>
                 GPA serves as an indicator of a student's academic performance, often influencing a student’s college admissions, scholarship eligibility, and future employment.
             </p>
         </section>
-
         <section className="mb-6">
             <h2 className="text-lg font-semibold mb-3">Weighted vs Unweighted</h2>
             <p>
                 Weighted GPA factors in the difficulty of courses, giving higher values to grades earned in advanced classes like AP or Honors, on a scale up to 5.0. An unweighted GPA treats all courses equally, regardless of difficulty, and is measured on a standard 4.0 scale.
             </p>
         </section>
-
         <section>
             <h2 className="text-lg font-semibold mb-3">How to Use The Calculator</h2>
             <ol className="list-decimal ml-4">
@@ -46,4 +36,3 @@ export default  function Page() {
     </main>
     );
 }
-

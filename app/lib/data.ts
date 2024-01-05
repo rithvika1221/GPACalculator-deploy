@@ -118,7 +118,6 @@ export async function saveStudentData(student: Student) {
 }
 
 
-
 // Delete this code
 // export async function getStudentData(id:string)
 // {
@@ -174,7 +173,7 @@ export async function getServerSideProps() {
   }
 }
 
-export async function fetchStudentData() {
+export async function fetchStudent() {
   try {
     const response = await fetch('http://localhost:8085/students/1');
     if (!response.ok) {
@@ -182,6 +181,29 @@ export async function fetchStudentData() {
     }
     const data = await response.json();
     return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+}
+
+export async function fetchStudentByName(name: string): Promise<User | undefined> {
+  try {
+    const response = await fetch('http://localhost:8085/students/1');
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const studentData: Student = await response.json();
+
+    // Map Student data to User structure
+    const userData: User = {
+      id: studentData.studentId.toString(),
+      name: studentData.studentName,
+      email: studentData.studentEmail,
+      password: studentData.studentPassword,
+      // Map other fields as necessary
+    };
+
+    return userData;
   } catch (error) {
     console.error('Fetch error:', error);
   }
