@@ -1,6 +1,6 @@
 'use client'
-import { AccordionData } from './myaccordion-type';
-import MyAccordionItem from './myaccordion-item';
+import { AccordionData } from './unused/myaccordion-type';
+import MyAccordionItem from './unused/myaccordion-item';
 
 import { Semester } from '@/app/lib/definitions';
 import { Accordion, AccordionItem } from '@nextui-org/react';

@@ -2,9 +2,9 @@
 
 import { Divider, Link, NextUIProvider } from "@nextui-org/react";
 import { Card } from '@/app/ui/dashboard/cards';
-import RevenueChart from '@/app/ui/dashboard/revenue-chart';
-import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
-import GpaCalculator from '@/app/ui/dashboard/gpa-calculator';
+import RevenueChart from '@/app/ui/dashboard/unused/revenue-chart';
+import LatestInvoices from '@/app/ui/dashboard/unused/latest-invoices';
+import GpaCalculator from '@/app/ui/dashboard/unused/gpa-calculator';
 import { lusitana } from '@/app/ui/fonts';
 import { Suspense } from 'react';
 import { InvoiceSkeleton, RevenueChartSkeleton, CardsSkeleton } from '@/app/ui/skeletons';

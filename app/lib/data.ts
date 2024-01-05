@@ -1,24 +1,43 @@
-import { sql } from '@vercel/postgres';
-import { unstable_noStore as noStore } from 'next/cache';
 import {
-  Course,
-   Student,
-  Semester,
+  Student,
+  User} from './definitions';
 
-  // Old data that needs to be deleted
-  CustomerField,
-  CustomersTableType,
-  InvoiceForm,
-  InvoicesTable,
-  LatestInvoiceRaw,
-  User,
-  Revenue
-} from './definitions';
-
-import { formatCurrency } from './utils';
-import { useState, useEffect } from 'react';
 
 const apiEndpoint = 'http://localhost:8085/students'; 
+
+export async function signupStudent(formData: FormData) {
+  try {
+    // Assuming you have fields like 'email', 'password', etc. in your FormData
+    const studentData: Student = {
+      studentEmail: formData.get('email') as string,
+      studentPassword: formData.get('password') as string,
+      studentId: 0,
+      studentName: formData.get('name') as string,
+      studentWeightedGPA: 0,
+      studentUnweightedGPA: 0,
+      semester: []
+    };
+
+    const studentUrl = 'http://localhost:8085/students';
+
+    const studentResponse = await fetch(studentUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(studentData)
+    });
+
+    if (!studentResponse.ok) {
+      const errorData = await studentResponse.json();
+      return { success: false, error: errorData };
+    }
+
+    const responseData = await studentResponse.json();
+    return { success: true, data: responseData };
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+}
+
 
 export async function getStudentData(id: string) {
   try {

@@ -40,7 +40,7 @@ const calculateGPA = (semester: Semester) => {
   semester.course.forEach(course => {
       const basePoints = gradePoints[course.courseGrade];
       const extraPoints = getExtraPoints(course.courseType);
-      const credits = parseInt(course.courseCredit);
+      const credits = parseFloat(course.courseCredit);
 
       totalUnweightedPoints += basePoints * credits;
       totalWeightedPoints += (basePoints + extraPoints) * credits;
@@ -58,7 +58,7 @@ const gpa = calculateGPA(semester);
   // Define the schema for a course
 const courseSchema = z.object({
   courseName: z.string().min(1, "Course name cannot be empty"),
-  courseGrade: z.enum(['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'E']),
+  courseGrade: z.enum(['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F']),
   courseCredit: z.number().min(0, "Credits must be a non-negative number"),
   courseType: z.enum(['Honors', 'AP', 'Regular']),
 });
@@ -159,7 +159,7 @@ const validateCourse = (course:Course) => {
                       <option value="C-">C-</option>
                       <option value="D+">D+</option>
                       <option value="D">D</option>
-                      <option value="E">E</option>                      
+                      <option value="F">F</option>                      
                     </select>
 
                   </td>

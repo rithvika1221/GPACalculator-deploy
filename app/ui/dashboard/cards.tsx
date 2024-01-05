@@ -38,13 +38,6 @@ export function Card({
 
         <h1 className="px-2 text-xl font-bold text-white md:text-xl lg:text-xl">{title}: {value}</h1>
       </div>
-
-
-      {/* <div className='h-10'>
-        <h1 className="text-center text-xl font-extrabold text-gray-900 md:text-xl lg:text-xl">
-          {value}
-        </h1>
-      </div> */}
     </div>
   );
 }

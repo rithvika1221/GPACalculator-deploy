@@ -15,7 +15,7 @@ import { lusitana } from '@/app/ui/fonts';
 import { LatestInvoice } from '@/app/lib/definitions';
 
 import { fetchStudentData } from '@/app/lib/data';
-import MyAccordion from "./myacordion";
+import MyAccordion from "../myacordion";
 import MyAccordionApp from "./myaccordion-app";
 
 // export default async function LatestInvoices({

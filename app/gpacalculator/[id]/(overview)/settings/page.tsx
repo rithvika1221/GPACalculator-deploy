@@ -1,4 +1,5 @@
 'use client'
+import { CircleStackIcon } from '@heroicons/react/24/outline';
 import { Divider } from '@nextui-org/react';
 import React, { useState, FormEvent } from 'react';
 // Define a type for the grade scale
@@ -69,11 +70,13 @@ const GpaSettings: React.FC = () => {
                 </table>
                
                 <div className='pt-6'>
-                <button 
-                className="inline-block pt-6 rounded bg-blue-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-blue-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-                focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-                focus:outline-none focus:ring-0 active:bg-blue-100 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                type="submit">Save Settings</button>
+                <button
+            type="button"
+            className="mt-4 bg-blue-500 text-black border border-black rounded-lg h-10 py-1 px-px w-48">
+              <CircleStackIcon className='bg-blue-500 text-black h-5 w-5 -my-3'></CircleStackIcon>
+            <p className='-m-5'>Save Data</p>
+           
+          </button> 
                 </div>
             </form>
         </div>

@@ -41,46 +41,52 @@ export default function Calculator({ params }: { params: string }) {
 
     const saveStudentT0DB = async (updatedStudent: Student) => {
             // Function to calculate weighted and unweighted GPA for a semester
-            const calculateGPA = (semester: Semester) => {
-                let totalWeightedPoints = 0;
-                let totalUnweightedPoints = 0;
-                let totalCredits = 0;
-                semester.course.forEach(course => {
-                    const basePoints = gradePoints[course.courseGrade];
-                    const extraPoints = getExtraPoints(course.courseType);
-                    const credits = parseInt(course.courseCredit);
-                    totalUnweightedPoints += basePoints * credits;
-                    totalWeightedPoints += (basePoints + extraPoints) * credits;
-                    totalCredits += credits;
-                });
-                semester.semUnweightedGPA = totalCredits > 0 ? totalUnweightedPoints / totalCredits : 0;
-                semester.semWeightedGPA = totalCredits > 0 ? totalWeightedPoints / totalCredits : 0;
-            };
-            const getExtraPoints = (courseType: any) => {
-                switch (courseType) {
-                    case 'AP':
-                        return 1; // 5 - 4 (base points) = 1 extra point
-                    case 'Honors':
-                        return 0.5; // 4.5 - 4 (base points) = 0.5 extra point
-                    default:
-                        return 0; // Regular courses don't have extra points
-                }
-            };
-            // Calculate GPA for each semester and overall GPA
-            let cumulativeWeightedGPA = 0;
-            let cumulativeUnweightedGPA = 0;
-            let totalSemesters = 0;
-            updatedStudent.semester.forEach(semester => {
-                calculateGPA(semester);
-                if (semester.semWeightedGPA > 0) {
-                    totalSemesters = totalSemesters + 1;
-                }
-                cumulativeWeightedGPA += semester.semWeightedGPA;
-                cumulativeUnweightedGPA += semester.semUnweightedGPA;
-            });
-            updatedStudent.studentWeightedGPA = cumulativeWeightedGPA / totalSemesters;
-            updatedStudent.studentUnweightedGPA = cumulativeUnweightedGPA / totalSemesters;
-            // Update the student data in state and database
+              // Variables to keep track of total points and credits
+              let ftotalUnweightedPoints = 0;
+              let ftotalWeightedPoints = 0;
+              let ftotalCredits = 0;
+   
+   
+           // Function to calculate weighted and unweighted GPA for a semester
+           const calculateGPA = (semester: Semester) => {
+               let totalWeightedPoints = 0;
+               let totalUnweightedPoints = 0;
+               let totalCredits = 0;
+               semester.course.forEach(course => {
+                   const basePoints = gradePoints[course.courseGrade];
+                   const extraPoints = getExtraPoints(course.courseType);
+                   const credits = parseFloat(course.courseCredit);
+                   totalUnweightedPoints += basePoints * credits;
+                   totalWeightedPoints += (basePoints + extraPoints) * credits;
+                   totalCredits += credits;
+                   ftotalUnweightedPoints += basePoints * credits;
+                   ftotalWeightedPoints += (basePoints + extraPoints) * credits;
+                   ftotalCredits += credits;
+               });
+               semester.semUnweightedGPA = totalCredits > 0 ? totalUnweightedPoints / totalCredits : 0;
+               semester.semWeightedGPA = totalCredits > 0 ? totalWeightedPoints / totalCredits : 0;
+           };
+           const getExtraPoints = (courseType: any) => {
+               switch (courseType) {
+                   case 'AP':
+                       return 1; // 5 - 4 (base points) = 1 extra point
+                   case 'Honors':
+                       return 0.5; // 4.5 - 4 (base points) = 0.5 extra point
+                   default:
+                       return 0; // Regular courses don't have extra points
+               }
+           };
+       
+        
+       
+           // Calculate GPA for each semester
+           updatedStudent.semester.forEach(semester => {
+               calculateGPA(semester);
+           });
+       
+           // Calculate cumulative GPA
+           updatedStudent.studentWeightedGPA = ftotalCredits > 0 ? ftotalWeightedPoints / ftotalCredits : 0;
+           updatedStudent.studentUnweightedGPA = ftotalCredits > 0 ? ftotalUnweightedPoints / ftotalCredits : 0;
             
             await saveStudentData(updatedStudent);
             window.location.reload();
@@ -88,6 +94,13 @@ export default function Calculator({ params }: { params: string }) {
     };
 
     const updateStudentData = async (updatedStudent: Student) => {
+
+           // Variables to keep track of total points and credits
+           let ftotalUnweightedPoints = 0;
+           let ftotalWeightedPoints = 0;
+           let ftotalCredits = 0;
+
+
         // Function to calculate weighted and unweighted GPA for a semester
         const calculateGPA = (semester: Semester) => {
             let totalWeightedPoints = 0;
@@ -96,10 +109,13 @@ export default function Calculator({ params }: { params: string }) {
             semester.course.forEach(course => {
                 const basePoints = gradePoints[course.courseGrade];
                 const extraPoints = getExtraPoints(course.courseType);
-                const credits = parseInt(course.courseCredit);
+                const credits = parseFloat(course.courseCredit);
                 totalUnweightedPoints += basePoints * credits;
                 totalWeightedPoints += (basePoints + extraPoints) * credits;
                 totalCredits += credits;
+                ftotalUnweightedPoints += basePoints * credits;
+                ftotalWeightedPoints += (basePoints + extraPoints) * credits;
+                ftotalCredits += credits;
             });
             semester.semUnweightedGPA = totalCredits > 0 ? totalUnweightedPoints / totalCredits : 0;
             semester.semWeightedGPA = totalCredits > 0 ? totalWeightedPoints / totalCredits : 0;
@@ -114,32 +130,27 @@ export default function Calculator({ params }: { params: string }) {
                     return 0; // Regular courses don't have extra points
             }
         };
-        // Calculate GPA for each semester and overall GPA
-        let cumulativeWeightedGPA = 0;
-        let cumulativeUnweightedGPA = 0;
-        let totalSemesters = 0;
+    
+     
+    
+        // Calculate GPA for each semester
         updatedStudent.semester.forEach(semester => {
             calculateGPA(semester);
-            if (semester.semWeightedGPA > 0) {
-                totalSemesters = totalSemesters + 1;
-            }
-            cumulativeWeightedGPA += semester.semWeightedGPA;
-            cumulativeUnweightedGPA += semester.semUnweightedGPA;
         });
-        updatedStudent.studentWeightedGPA = cumulativeWeightedGPA / totalSemesters;
-        updatedStudent.studentUnweightedGPA = cumulativeUnweightedGPA / totalSemesters;
-        // Update the student data in state and database
+    
+        // Calculate cumulative GPA
+        updatedStudent.studentWeightedGPA = ftotalCredits > 0 ? ftotalWeightedPoints / ftotalCredits : 0;
+        updatedStudent.studentUnweightedGPA = ftotalCredits > 0 ? ftotalUnweightedPoints / ftotalCredits : 0;
+    
+        // Set the student data in state (this does not update the database)
         setStudentData(updatedStudent);
-        //await saveStudentData(updatedStudent);
     };
+    
+
     return (
         <main>
           
             <div className="grid  sm:grid-cols-2 lg:grid-cols-4 ">
-                {/* <CardWrapper /> */}
-                {/* <Suspense fallback={<CardsSkeleton />}>
-         
-        </Suspense> */}
                 <Card
                     title="Unweighted GPA"
                     value={studentData?.studentUnweightedGPA ? studentData.studentUnweightedGPA.toFixed(2) : 'N/A'}
