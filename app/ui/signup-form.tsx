@@ -30,22 +30,18 @@ export default function SignUpForm() {
 
     // Create a handler for form submission
     const handleSubmit = async (event) => {
-       
-
         const formData = new FormData(event.target);
         const response = await signupStudent(formData);
 
         if (!response.success) {
             setErrorMessage(response.error || "Something went wrong");
         } else {
-            useEffect(() => {
-                router.push('/login');
-             }, []);
+            window.location.href = 'http://localhost:3000/login';
         }
     };
 
     return (
-        <form action={signupStudent} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-3">
             <div className="flex-1 rounded-lg bg-blue-50 px-6 pb-4 pt-8">
                 <h1 className={`${lusitana.className} mb-3 text-2xl`}>
                     Please provide the details to singup.

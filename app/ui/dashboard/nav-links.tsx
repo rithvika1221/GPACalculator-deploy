@@ -26,9 +26,9 @@ const links = [
   {
     name: 'GPA Calculator', href: `/gpacalculator/${param}`, icon: HomeIcon
   },
-  {
-    name: 'Settings', href: `/gpacalculator/${param}/settings`, icon: Cog8ToothIcon,
-  },
+  // {
+  //   name: 'Settings', href: `/gpacalculator/${param}/settings`, icon: Cog8ToothIcon,
+  // },
   {
     name: 'Help', href: '/gpacalculator/help', icon: InformationCircleIcon,
   }

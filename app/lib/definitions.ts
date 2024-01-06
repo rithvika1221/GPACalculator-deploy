@@ -36,6 +36,11 @@ export interface Student {
   studentUnweightedGPA: number;
   semester: Semester[];
 }
+export interface Settings {
+  gpa:number;
+  letter: string;
+  settingId:number;
+}
 
 
 

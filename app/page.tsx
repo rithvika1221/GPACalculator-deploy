@@ -18,10 +18,8 @@ export default function Page({}) {
           <p
             className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}
           >
-            <strong>Hello This is Rithvika, Welcome to fun nextjs project GPA Calculator.</strong> 
-            <a href="https://nextjs.org/learn/" className="text-blue-500">
-              Developed from Next.js Learn Course
-            </a>
+            <strong>Welcome to GPA Calculator</strong> 
+           
             
           </p>
           <Link

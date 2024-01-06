@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import React, { useState, useEffect } from 'react';
 import { auth } from '@/auth';
 import { CircleStackIcon } from '@heroicons/react/24/outline';
+
 export default function Calculator({ params }: { params: string }) {
     //const studentData: Student = await getStudentData();
     const [stu, setData] = useState(null);

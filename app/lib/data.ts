@@ -1,4 +1,5 @@
 import {
+  Settings,
   Student,
   User} from './definitions';
 
@@ -18,25 +19,79 @@ export async function signupStudent(formData: FormData) {
       semester: []
     };
 
-    const studentUrl = 'http://localhost:8085/students';
-
-    const studentResponse = await fetch(studentUrl, {
+    const response = await fetch('http://localhost:8085/students', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(studentData)
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(studentData),
     });
+    
+    const result = await response.json(); // Parse the response (assuming it's JSON)
 
-    if (!studentResponse.ok) {
-      const errorData = await studentResponse.json();
-      return { success: false, error: errorData };
+    if (!response.ok) {
+      console.error('Response error:', result);
+      return { success: false, error: result };
     }
-
-    const responseData = await studentResponse.json();
-    return { success: true, data: responseData };
+    
+    return { success: true, data: result };
   } catch (error) {
-    console.error('Fetch error:', error);
+    console.error('Post error:', error);
+    return { success: false, error: 'Error occurred while signing up student.' };
   }
 }
+
+export async function saveSettings(settings: Settings[], studentId: string) {
+  try {
+    const responses = [];
+    const settingsUrl = `http://localhost:8085/students/${studentId}/settings`;
+
+    // Fetch existing settings once, outside the loop
+    const existingSettingsResponse = await fetch(settingsUrl);
+    let existingSettings = [];
+
+    if (existingSettingsResponse.ok) {
+      existingSettings = await existingSettingsResponse.json();
+    }
+
+    for (const setting of settings) {
+      let method = 'POST';
+      let url = settingsUrl;
+
+      // Check if the setting already exists
+      const existingSetting = existingSettings.find(s => s.settingId === setting.settingId);
+
+      if (existingSetting) {
+        method = 'PUT';
+        url = `${settingsUrl}/${setting.settingId}`;
+      }
+
+      // Now, either update or create the setting
+      const settingResponse = await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(setting)
+      });
+
+      if (!settingResponse.ok) {
+        const errorData = await settingResponse.json();
+        responses.push({ success: false, error: errorData });
+        continue;
+      }
+
+      const responseData = await settingResponse.json();
+      responses.push({ success: true, data: responseData });
+    }
+
+    return { success: true, responses: responses };
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return { success: false, error: 'Fetch error' };
+  }
+}
+
+
+
 
 
 export async function getStudentData(id: string) {
@@ -171,6 +226,19 @@ export async function saveStudentData(student:Student) {
 export async function fetchStudent() {
   try {
     const response = await fetch('http://localhost:8085/students/1');
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+}
+
+export async function fetchSettings(id:string) {
+  try {
+    const response = await fetch(`http://localhost:8085/students/${id}/settings`);
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }

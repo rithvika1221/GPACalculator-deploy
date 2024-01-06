@@ -34,7 +34,7 @@ const saveStudent = () => {
     if (semesters.length < 8) { // Check if the number of semesters is less than 8
       // Define a default course with empty or initial values
       const defaultCourse = { courseName: '', courseGrade: '', courseCredit: '', courseType: '' };
-      const newCourse = { courseName: '', courseGrade: 'A', courseCredit: '1', courseType: 'Regular' };
+      const newCourse = { courseName: '', courseGrade: 'A', courseCredit: '0.5', courseType: 'Regular' };
       // Create a new semester with the default course
       const newSemester = { semesterName:"", semUnweightedGPA:0, semWeightedGPA:0, course: [newCourse] };
       setSemesters([...semesters, newSemester]);

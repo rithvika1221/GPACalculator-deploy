@@ -82,9 +82,26 @@ const validateCourse = (course:Course) => {
     updateSemester({ ...semester, course: updatedCourses });
 };
 
+const handleCourseDetailBlur = (courseIndex: number, field: keyof Course, value: string) => {
+  if (field === 'courseCredit') {
+      const creditValue = parseFloat(value);
+
+      // Validate credit value
+      if (!isNaN(creditValue) && creditValue >= 0.0 && creditValue <= 5.0) {
+          // If valid, update the state
+          const updatedCourses = [...semester.course];
+          updatedCourses[courseIndex] = { ...updatedCourses[courseIndex], [field]: creditValue };
+          updateSemester({ ...semester, course: updatedCourses });
+          setError(""); // Reset any error message
+      } else {
+          setError('CreditValue should be between 0.0 and 5.0'); 
+      }
+  }
+};
+
   const handleAddCourse = () => {
     if (semester.course.length < 10) { // Check if the number of courses is less than 10
-      const newCourse = { courseName: '', courseGrade: 'A', courseCredit: '1', courseType: 'Regular' };
+      const newCourse = { courseName: '', courseGrade: 'A', courseCredit: '0.5', courseType: 'Regular' };
       const updatedSemester = { ...semester, course: [...semester.course, newCourse] };
       updateSemester(updatedSemester);
       setError(""); // Reset any error message
@@ -103,6 +120,7 @@ const validateCourse = (course:Course) => {
 
   return (
     <div className="accordion-item">
+       {error && <p className="text-red-500">{error}</p>} 
       <button className="accordion-title" onClick={toggleOpen}>
         <h1 className="mb-4 text-xl f text-black ">
           {semesterDisplayName}
@@ -168,6 +186,7 @@ const validateCourse = (course:Course) => {
                       type="text" 
                       value={course.courseCredit.toString()} 
                       onChange={(e) => handleCourseDetailChange(index, 'courseCredit', e.target.value)}
+                      onBlur={(e) => handleCourseDetailBlur(index, 'courseCredit', e.target.value)}
                       className="rounded-xl w-36 text-sm"
                     />
                   </td>
