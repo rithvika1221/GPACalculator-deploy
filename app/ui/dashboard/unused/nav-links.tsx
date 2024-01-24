@@ -41,7 +41,6 @@ const links = [
   return (
     <>
  
-      <p>{}</p>
       {links.map((link) => {
         const LinkIcon = link.icon;
         return (

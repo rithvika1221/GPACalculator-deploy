@@ -1,5 +1,5 @@
 
-import Accordion from "../myacordion";
+import Accordion from "./myacordion";
 import { fetchSemesterStudentData, fetchStudentData } from '@/app/lib/data';
 import { Course, Semester, StudentData } from "@/app/lib/definitions";
 import clsx from "clsx";

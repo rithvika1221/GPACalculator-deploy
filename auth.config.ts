@@ -43,31 +43,3 @@ export const authConfig = {
   
 } satisfies NextAuthConfig;
 
-
-// import type { NextAuthConfig } from 'next-auth';
-
-// export const authConfig: NextAuthConfig = {
-//   pages: {
-//     signIn: '/login',
-//   },
-
-//   session: {
-//     strategy: 'jwt',
-//     // Optional: if using database sessions, you might have different settings
-//   },
-
-//   callbacks: {
-//     async redirect({ url, baseUrl }) {
-//       // Redirect user to the dashboard after successful login
-//       if (url.startsWith(baseUrl)) return '/gpacalculator/1';
-//       return baseUrl;
-//     },
-    
-//     async session({ session, token, user }) {
-//       // Add necessary user data to the session
-//       session.user = user;
-//       return session;
-//     },
-//   },
-//   providers: [], // Your providers here
-// };

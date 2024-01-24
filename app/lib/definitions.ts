@@ -16,6 +16,7 @@ export interface Course {
   courseGrade: string;
   courseCredit: number;
   courseType: string;
+  courseSemester:Semester| null;
 }
 
 export interface Semester {
@@ -25,6 +26,7 @@ export interface Semester {
   semUnweightedGPA: number;
   semWeightedGPA: number;
   course: Course[];
+  semesterStudent: Student | null;
 }
 
 export interface Student {

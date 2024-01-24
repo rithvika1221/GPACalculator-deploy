@@ -1,16 +1,13 @@
 'use client'
 import { fetchSettings, saveSettings } from '@/app/lib/data';
 import { CircleStackIcon } from '@heroicons/react/24/outline';
-import { Divider } from '@nextui-org/react';
 import React, { useState, FormEvent, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
-import { useRouter } from 'next/router'; // Import useRouter
 import { Settings } from '@/app/lib/definitions';
 
 
 
-
-export default async function Page({ params }: { params: { id: string } }) {
+export default  function Page({ params }: { params: { id: string } }) {
     // State for an array of grade scales
     const [gradeScales, setGradeScales] = useState<Settings[]>([]);
 
@@ -68,27 +65,20 @@ export default async function Page({ params }: { params: { id: string } }) {
 
         
         const newGradeScales = [...gradeScales];
-        if (field === 'gpa') {
-            const gpaValue = parseFloat(value);
-            if (!isNaN(gpaValue) && gpaValue >= 0.0 && gpaValue <= 4.0) {
-                newGradeScales[index][field] = gpaValue;
-                setErrorMessage('GPA must be between 0.0 and 4.0'); // Clear any previous error message
-            } else {
-                setErrorMessage('GPA must be between 0.0 and 4.0');
-            }
-        } else {
-            newGradeScales[index][field] = value;
-        }
+        newGradeScales[index][field] = value;
         setGradeScales(newGradeScales);
     };
     
+
+
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
     
         // Validate all GPA values before submitting
         const isValid = gradeScales.every(scale => scale.gpa >= 0.0 && scale.gpa <= 4.0);
         if (!isValid) {
-            setErrorMessage('All GPA values must be between 0.0 and 4.0');
+            setErrorMessage('Settings, not saved to database. All GPA values must be between 0.0 and 4.0. Please change the values before saving the data.');
+            setColor('text-red-600');
             return; // Stop the form submission
         }
     
@@ -124,12 +114,12 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                                 <td>
                                     <input
-                                        type="text"
+                                        type="number"
                                         id="gpa"
                                         className="block flex-1 border-1 w-64 rounded-xl bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                                         value={scale.gpa}
                                         onChange={(e) => handleGradeChange(index, 'gpa', e.target.value)}
-                                       
+                                      
                                     />
                                 </td>
                             </tr>

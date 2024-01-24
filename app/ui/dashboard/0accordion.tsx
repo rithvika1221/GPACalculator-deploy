@@ -6,16 +6,24 @@ import { Button, Divider } from '@nextui-org/react';
 import { PlusIcon, CircleStackIcon } from '@heroicons/react/24/outline';
 
 import { MdNewLabel } from "react-icons/md";
+import ChatbotModal from './chatbot';
 
 const AccordionItem = dynamic(() => import('./0accordion-item'), { ssr: false });
+
 interface AccordionProps {
   student: Student;
   onStudentUpdate: (updatedStudent: Student) => void;
   saveStudentUpdate: (updatedStudent: Student) => void;
 }
+
 const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate, saveStudentUpdate }) => {
   const [semesters, setSemesters] = useState<Semester[]>(student.semester);
   const [error, setError] = useState(''); // State for error message
+
+  const [isMinimized, setIsMinimized] = useState(false);
+  const toggleMinimize = () => setIsMinimized(!isMinimized);
+
+  
 
   const updateSemester = (index: number, updatedSemester: Semester) => {
     const updatedStudent = { ...student, semester: [...student.semester] };
@@ -55,13 +63,13 @@ const saveStudent = () => {
   };
 
   return (
-    <div className='rounded-t-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-blue-100  text-black w-2/3'>
+    <div className='rounded-t-lg bg-blue-100 dark:border-neutral-600 dark:bg-blue-100  text-black w-full'>
       {error && <p className="text-red-500">{error}</p>} {/* Display error message if it exists */}
     
       {semesters.map((semester, index) => (
         <React.Fragment key={index}>
           
-          <div className="mb-4 border-5 border-white rounded-lg overflow-hidden">
+          <div className="mb-4  rounded-lg overflow-hidden">
             <AccordionItem
               semester={semester}
               semesterNumber={index + 1}
@@ -91,6 +99,10 @@ const saveStudent = () => {
             <p className='-m-5'>Save Data</p>
            
           </button> 
+        
+        
+
+      <ChatbotModal isMinimized={isMinimized} toggleMinimize={toggleMinimize} studentData={student} />
          
           
         </div>

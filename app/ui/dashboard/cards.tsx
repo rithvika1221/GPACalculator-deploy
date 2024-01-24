@@ -32,7 +32,7 @@ export function Card({
   const Icon = iconMap[type];
 
   return (
-    <div className="rounded-xl bg-blue-500  shadow-sm h-20">
+    <div className="rounded-xl bg-blue-500  shadow-sm h-20 ">
       <div className="flex p-5 ">
         {Icon ? <Icon className="h-5 w-5 text-white" /> : null}
 
