@@ -6,8 +6,14 @@ import { useFormStatus } from 'react-dom';
 import { Settings } from '@/app/lib/definitions';
 
 
-
+/**
+ * Component for settings page.
+ * This page allows users to customize and save GPA grade settings.
+ * @param {object} params - Object containing route parameters.
+ * @param {string} params.id - Unique identifier for settings.
+ */
 export default  function Page({ params }: { params: { id: string } }) {
+    
     // State for an array of grade scales
     const [gradeScales, setGradeScales] = useState<Settings[]>([]);
 
@@ -15,12 +21,11 @@ export default  function Page({ params }: { params: { id: string } }) {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [color, setColor] = useState<string>('bg-red');
 
-   
-
+    // Fetch data from database
     useEffect(() => {
-
         const fetchData = async () => {
             const data = await fetchSettings(params.id);
+            // If not data is found then set default values
             if(data.length ==0)
             {
                 setGradeScales([
@@ -33,21 +38,20 @@ export default  function Page({ params }: { params: { id: string } }) {
                     { letter: 'C+', gpa: 2.3 ,settingId:0},
                     { letter: 'C', gpa: 2.0 ,settingId:0},
                     { letter: 'C-', gpa: 1.7 ,settingId:0},
-                    { letter: 'D+', gpa: 1.3 ,settingId:0},
-                    { letter: 'D', gpa: 1.0 ,settingId:0 },
+                    { letter: 'D', gpa: 1.3 ,settingId:0},
+                    { letter: 'D+', gpa: 1.0 ,settingId:0 },
                     { letter: 'F', gpa: 0.0 ,settingId:0 }
-            
                 ]);
             }
             else
             {
             setGradeScales(data);
             }
-
         };
         fetchData();
     }, []);
 
+    // Function for the submit button
     function SubmitButton() {
         const { pending } = useFormStatus()
 
@@ -61,16 +65,14 @@ export default  function Page({ params }: { params: { id: string } }) {
         )
     }
 
-    const handleGradeChange = (index: number, field: keyof Settings, value: string) => {
-
-        
-        const newGradeScales = [...gradeScales];
-        newGradeScales[index][field] = value;
+    // Function for handling gade 
+    const handleGradeChange = <K extends keyof Settings>(index: number, field: K, value: Settings[K]) => {
+        const newGradeScales = [...gradeScales] ?? [];
+        newGradeScales[index][field] = value as any; 
         setGradeScales(newGradeScales);
     };
     
-
-
+    // Function for handling the form submit
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
     
@@ -79,7 +81,7 @@ export default  function Page({ params }: { params: { id: string } }) {
         if (!isValid) {
             setErrorMessage('Settings, not saved to database. All GPA values must be between 0.0 and 4.0. Please change the values before saving the data.');
             setColor('text-red-600');
-            return; // Stop the form submission
+            return; 
         }
     
         // Call saveSettings with the current gradeScales state
@@ -118,7 +120,8 @@ export default  function Page({ params }: { params: { id: string } }) {
                                         id="gpa"
                                         className="block flex-1 border-1 w-64 rounded-xl bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                                         value={scale.gpa}
-                                        onChange={(e) => handleGradeChange(index, 'gpa', e.target.value)}
+                                        onChange={(e) => handleGradeChange(index, 'gpa', parseFloat(e.target.value))}
+
                                       
                                     />
                                 </td>
@@ -128,10 +131,7 @@ export default  function Page({ params }: { params: { id: string } }) {
                 </table>
 
                 <div className='pt-6'>
-
-                    <SubmitButton>
-
-                    </SubmitButton>
+                    <SubmitButton/>
                 </div>
                 <div>
                     {errorMessage && (

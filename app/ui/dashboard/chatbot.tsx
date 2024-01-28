@@ -1,86 +1,89 @@
 'use client';
-
-import React, { useState, ChangeEvent, KeyboardEvent, use } from 'react';
+import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import axios from 'axios';
 import { Semester, Student } from '@/app/lib/definitions';
-import { string } from 'zod';
 
-
+// Props interface for ChatbotModal component
 interface ChatbotModalProps {
-  isMinimized: boolean;
-  toggleMinimize: () => void;
-  studentData: Student;
+  isMinimized: boolean; // Indicates if the chatbot is minimized
+  toggleMinimize: () => void; // Function to toggle the chatbot's minimized state
+  studentData: Student; // Data of the student using the chatbot
 }
 
-const ChatbotModal: React.FC<ChatbotModalProps> = ({ isMinimized, toggleMinimize , studentData}) => {
-  const [question, setQuestion] = useState<string>('');
-  const [response, setResponse] = useState<string>('');
-  const [messages, setMessages] = useState<string[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [student, setStudentData] = useState<Student>(studentData);
+// ChatbotModal component
+// - This component is responsible for managing the state and UI of a chatbot.
+// - It interacts with the OpenAI API to generate responses based on user queries.
+const ChatbotModal: React.FC<ChatbotModalProps> = ({ isMinimized, toggleMinimize, studentData }) => {
+  const [question, setQuestion] = useState<string>(''); // State to store the user's question
+  const [response, setResponse] = useState<string>(''); // State to store the chatbot's response
+  const [messages, setMessages] = useState<string[]>([]); // State to store the chat conversation history
+  const [isLoading, setLoading] = useState<boolean>(false); // State to indicate if a request is in progress
+  const [student, setStudentData] = useState<Student>(studentData); // State to store student data
 
-
-
+  // handleSubmit function to handle the submission of the user's question
   const handleSubmit = async (): Promise<void> => {
     console.log('handleSubmit called'); // Debug log
-    setLoading(true);
-    updateStudentData(studentData);
+    setLoading(true); // Set loading state to true
+    updateStudentData(studentData); // Update student data
 
-    var  prompt= "This questions is from a Chatbot inside a GPA Calculator.\n\n ";
-    prompt += "Limit the answer to 500 characters.\nn";
-    prompt+= "-Please answer questions related to the following topics High School courses, High School and Collage  Education related questions and GPA Calculation.";
-    prompt += "-Example: If the user aks questions about high schools answer that question \n\n "
-    prompt += "-Example: If the Student ask's any topics other than High School courses, High School and Collage  Education related questions and GPA Calculation then give a message that this question falls out side of the context.";
+    // Constructing the prompt for the OpenAI API
+    var prompt = "This question is from a Chatbot inside a GPA Calculator.\n\n";
+    prompt += "-Please answer questions related to the following topics only: High School courses, High School and College Education related questions, and GPA Calculation.\n\n";
+    //prompt += "-Example: If the user asks questions about high schools, answer that question.\n\n";
+    prompt += "If the Student asks about topics other than the above mentioned topics, give a message that this question falls outside of the context. \n\n";
 
+    // Adding specific instructions if the question includes "gpa"
+    if (question.toLowerCase().includes("gpa")) {
+      prompt += "\n\n-Example: If the user asks questions related to GPA like \"How to improve my GPA\", then look at the GPA of the user which is provided below, and answer how the user can improve in subjects where they have lower marks.\n\n";
+      prompt += "\n\n-GPA of the user:\n";
+      prompt += JSON.stringify(student, null, 2);
 
-    if (question.toLowerCase().includes("gpa"))
-    {
-      prompt += " \n\n-Example: Ff the user ask any questions related to GPA like \"How to improve my GPA\", then look at the GPA of the user which is provided below, and answer how  user can improve in subjects which he got less marks. \n\n";
-      prompt += "\n\n-GPA of the user:\n"
-      prompt = prompt + JSON.stringify(student, null,2);
+      prompt += "\n Limit the answer to 500 characters."
     }
 
-  
+    // Payload for the OpenAI API request
     const data = {
       model: "gpt-4-1106-preview",
-      messages: [{ "role": "user", "content": question }, {"role": "system", "content":  prompt  }],
+      messages: [{ "role": "user", "content": question }, { "role": "system", "content": prompt }],
       max_tokens: 256
-     };
+    };
 
-    if (!question.trim()) return; // prevent empty submissions
+    if (!question.trim()) return; // Prevent empty submissions
 
+    // Sending the request to the OpenAI API
     try {
-      const body = data;
       const url = 'https://api.openai.com/v1/chat/completions';
       const headers = {
         'Content-type': 'application/json',
-        'Authorization': `Bearer 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`
+        //'Authorization': `Bearer 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` // Note: API Key should be secured
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
       };
-  
+
       const response = await axios.post(url, data, { headers: headers });
-      setLoading(false);
-      console.log(response);
-  
+      setLoading(false); // Set loading to false after getting the response
+      console.log(response); // Log the response
+
+      // Process the response and update the chat history
       const newResponse = response.data.choices[0].message.content;
       setResponse(newResponse);
       setMessages(messages => [...messages, `Q: ${question}`, `A: ${newResponse}`]);
-      setQuestion(''); // clear the input after sending
+      setQuestion(''); // Clear the input after sending
     } catch (error: any) {
-      console.log(error);
-      
+      console.error(error); // Log any errors
     }
   };
 
+  // handleKeyPress function to submit the question when the Enter key is pressed
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
       handleSubmit();
     }
   };
 
-
-    const updateStudentData =  (updatedStudent: Student) => {
-        // Function to calculate weighted and unweighted GPA for a semester
-        const calculateGPA = (semester: Semester) => {
+  // updateStudentData function to update the student data state
+  const updateStudentData = (updatedStudent: Student) => {
+    // Function to calculate weighted and unweighted GPA for a semester
+    const calculateGPA = (semester: Semester) => {
             semester.course.forEach(course => {
               course.courseSemester  = null;
             });
@@ -91,7 +94,7 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isMinimized, toggleMinimize
             calculateGPA(semester);
             semester.semesterStudent = null;
         });
-        setStudentData(student);
+        setStudentData(updatedStudent);
 
     };
   

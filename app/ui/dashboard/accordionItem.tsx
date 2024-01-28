@@ -1,22 +1,50 @@
 'use client'
-import React, { useState } from 'react';
-import { Semester, Course, Grade, gradePoints } from '@/app/lib/definitions';
+import React, { useEffect, useState } from 'react';
+import { Semester, Course, Settings} from '@/app/lib/definitions';
+import { Grade,fetchSettings,gradePoints } from '@/app/lib/data';
 import { Button, Switch } from '@nextui-org/react';
 import { z } from 'zod';
 
+
 interface AccordionItemProps {
+  // Array of settings, like grade-to-GPA mappings
+  settings: Settings[];
+  // Data for the current semester, including courses and GPA
   semester: Semester;
+  // Numeric identifier for the semester
   semesterNumber: number;
+  // Function to update semester data
   updateSemester: (updatedSemester: Semester) => void;
-  deleteSemester: () => void;// Pass the function here
+  // Function to delete the current semester
+  deleteSemester: () => void;
 }
 
-const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber, updateSemester, deleteSemester }) => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [error, setError] = useState("");
 
+/**
+ * Component for settings page.
+ * This page allows users to customize and save GPA grade settings.
+// - `settings`: An array of `Settings` objects. These settings presumably include grade-to-GPA mappings.
+// - `semester`: An object representing the current semester's data, including courses and GPA.
+// - `semesterNumber`: A numeric identifier for the semester, used for display purposes.
+// - `updateSemester`: A function to update the semester's data when changes are made.
+// - `deleteSemester`: A function to delete the current semester.
+ */
+const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semesterNumber, updateSemester, deleteSemester }) => {
+
+  // state for isOpen
+  const [isOpen, setIsOpen] = useState(true);
+  // state of error
+  const [error, setError] = useState("");
+  // state for toggleOpen
   const toggleOpen = () => setIsOpen(!isOpen);
+  // state for semesterDisplayName
   const semesterDisplayName = `Semester ${semesterNumber}`;
+
+  // state for 
+  const findGPAByLetter = (letter: string): number | undefined => {
+    const setting = settings.find(s => s.letter === letter);
+    return setting?.gpa ?? 0;
+  };
 
   const getExtraPoints = (courseType: any) => {
     switch (courseType) {
@@ -28,19 +56,17 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
         return 0; // Regular courses don't have extra points
     }
   };
-
-
-
-
+ 
+  // Function to calculate the Semester GPA
   const calculateGPA = (semester: Semester) => {
     let totalWeightedPoints = 0;
     let totalUnweightedPoints = 0;
     let totalCredits = 0;
 
     semester.course.forEach(course => {
-      const basePoints = gradePoints[course.courseGrade];
+      const basePoints = findGPAByLetter(course.courseGrade) ?? 0;
       const extraPoints = getExtraPoints(course.courseType);
-      const credits = parseFloat(course.courseCredit);
+      const credits = parseFloat(course.courseCredit.toString());
 
       totalUnweightedPoints += basePoints * credits;
       totalWeightedPoints += (basePoints + extraPoints) * credits;
@@ -53,8 +79,6 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
 
   const gpa = calculateGPA(semester);
 
-  // 
-
   // Define the schema for a course
   const courseSchema = z.object({
     courseName: z.string().min(1, "Course name cannot be empty"),
@@ -62,6 +86,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
     courseCredit: z.number().min(0, "Credits must be a non-negative number"),
     courseType: z.enum(['Honors', 'AP', 'Regular']),
   });
+
 
   // Function to validate a course
   const validateCourse = (course: Course) => {
@@ -74,18 +99,17 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
     }
   };
 
-
+  // Function to handle course detail change
   const handleCourseDetailChange = (courseIndex: number, field: keyof Course, value: string) => {
-
     const updatedCourses = [...semester.course];
     updatedCourses[courseIndex] = { ...updatedCourses[courseIndex], [field]: value };
     updateSemester({ ...semester, course: updatedCourses });
   };
 
+  // function to handle Course Details Blur
   const handleCourseDetailBlur = (courseIndex: number, field: keyof Course, value: string) => {
     if (field === 'courseCredit') {
       const creditValue = parseFloat(value);
-
       // Validate credit value
       if (!isNaN(creditValue) && creditValue >= 0.0 && creditValue <= 5.0) {
         // If valid, update the state
@@ -99,6 +123,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
     }
   };
 
+  // Fumctoin to handle add course
   const handleAddCourse = () => {
     if (semester.course.length < 10) { // Check if the number of courses is less than 10
       const newCourse = { courseName: '', courseGrade: 'A', courseCredit: '0.5', courseType: 'Regular' };
@@ -110,7 +135,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
     }
   };
 
-
+  // Function to handle couse delete
   const handleCourseDelete = (courseIndex: number) => {
     const updatedCourses = semester.course.filter((_, index) => index !== courseIndex);
     const updatedSemester = { ...semester, course: updatedCourses };
@@ -121,7 +146,6 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
   return (
     <div className="accordion-item mx-5">
       {error && <p className="text-red-500">{error}</p>}
-
 
       <div className="flex justify-between items-center space-x-4">
         <div className="flex justify-between items-center space-x-4">
@@ -152,10 +176,8 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
 
 
       {isOpen && (
-        <div className="text-black ">
-
-
-          <table >
+        <div className="text-black overflow-x-auto ">
+         <table >
             <thead>
               <tr className='text-black text-sm'>
                 <th className='text-left'>Course Name</th>
@@ -173,7 +195,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
                       type="text"
                       value={course.courseName}
                       onChange={(e) => handleCourseDetailChange(index, 'courseName', e.target.value)}
-                      className="rounded-xl w-64 text-sm"
+                      className="rounded-xl w-64 md:w-64 sm:w-32 text-sm"
                     />
                   </td>
                   <td className='text-left align-middle'>
@@ -223,9 +245,6 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
               ))}
             </tbody>
           </table>
-
-
-
           <div>
             <Button className="mt-4 bg-blue-100 text-white border border-black text-black" onClick={handleAddCourse}>
               Add Course
@@ -236,11 +255,6 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ semester, semesterNumber,
           </div>
         </div>
       )}
-
-
-
-
-
     </div>
   );
 };

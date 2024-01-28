@@ -1,29 +1,26 @@
 'use client'
 import React, { useState } from 'react';
-import { Student, Semester } from '@/app/lib/definitions';
+import { Student, Semester, Settings } from '@/app/lib/definitions';
 import dynamic from 'next/dynamic';
-import { Button, Divider } from '@nextui-org/react';
+import { Divider } from '@nextui-org/react';
 import { PlusIcon, CircleStackIcon } from '@heroicons/react/24/outline';
-
-import { MdNewLabel } from "react-icons/md";
 import ChatbotModal from './chatbot';
 
-const AccordionItem = dynamic(() => import('./0accordion-item'), { ssr: false });
+const AccordionItem = dynamic(() => import('./accordionItem'), { ssr: false });
 
 interface AccordionProps {
   student: Student;
   onStudentUpdate: (updatedStudent: Student) => void;
   saveStudentUpdate: (updatedStudent: Student) => void;
+  gradeScales : Settings[];
 }
 
-const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate, saveStudentUpdate }) => {
+const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate, saveStudentUpdate , gradeScales}) => {
   const [semesters, setSemesters] = useState<Semester[]>(student.semester);
   const [error, setError] = useState(''); // State for error message
-
   const [isMinimized, setIsMinimized] = useState(false);
   const toggleMinimize = () => setIsMinimized(!isMinimized);
-
-  
+    
 
   const updateSemester = (index: number, updatedSemester: Semester) => {
     const updatedStudent = { ...student, semester: [...student.semester] };
@@ -60,6 +57,8 @@ const saveStudent = () => {
     const updatedStudent = { ...student, semester: updatedSemesters };
     onStudentUpdate(updatedStudent);
     console.log(student);
+    setError('');
+
   };
 
   return (
@@ -71,6 +70,7 @@ const saveStudent = () => {
           
           <div className="mb-4  rounded-lg overflow-hidden">
             <AccordionItem
+              settings={gradeScales}
               semester={semester}
               semesterNumber={index + 1}
               updateSemester={(updatedSemester) => updateSemester(index, updatedSemester)}
@@ -97,19 +97,11 @@ const saveStudent = () => {
             onClick={saveStudent}>
               <CircleStackIcon className='bg-blue-100 text-black h-5 w-5 -my-3'></CircleStackIcon>
             <p className='-m-5'>Save Data</p>
-           
           </button> 
-        
-        
-
       <ChatbotModal isMinimized={isMinimized} toggleMinimize={toggleMinimize} studentData={student} />
-         
-          
         </div>
       </div>
-     
     </div>
-    
   );
 };
 export default Accordion;

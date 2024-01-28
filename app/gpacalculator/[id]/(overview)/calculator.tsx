@@ -1,38 +1,55 @@
 'use client';
 import { Card } from '@/app/ui/dashboard/cards';
-import { getStudentData, saveStudentData } from "@/app/lib/data";
-import { Semester, Student, gradePoints, User } from "@/app/lib/definitions";
-import AAccordion from "@/app/ui/dashboard/0accordion";
-import { useSession } from 'next-auth/react';
+import { fetchSettings, getStudentData, saveStudentData } from "@/app/lib/data";
+import { Semester, Settings, Student } from "@/app/lib/definitions";
+import AAccordion from "@/app/ui/dashboard/accordion";
 import React, { useState, useEffect } from 'react';
-import { auth } from '@/auth';
-import { CircleStackIcon } from '@heroicons/react/24/outline';
-import { Console } from 'console';
 
+/**
+ * Main Component for GPA Calculator 
+  * @param {string} params  - this parameter represents the student id
+ */
 export default function Calculator({ params }: { params: string }) {
-    //const studentData: Student = await getStudentData();
-    const [stu, setData] = useState(null);
+
+    // state for teh student data.    
     const [studentData, setStudentData] = useState<Student | null>(null);
-    const [message, setMessage] = useState('');
 
- 
+    // State for storing error message
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [color, setColor] = useState<string>('text-green-500');
 
+    // State for an array of grade scales
+    const [gradeScales, setGradeScales] = useState<Settings[]>([]);
+
+    // Fetch grade settings from database
     useEffect(() => {
         const fetchData = async () => {
-            try {
+            const data = await fetchSettings(params);
+            if (data.length == 0) {
+                setGradeScales([
+                    { letter: 'A+', gpa: 4.0, settingId: 0 },
+                    { letter: 'A', gpa: 4.0, settingId: 0 },
+                    { letter: 'A-', gpa: 3.7, settingId: 0 },
+                    { letter: 'B+', gpa: 3.3, settingId: 0 },
+                    { letter: 'B', gpa: 3.0, settingId: 0 },
+                    { letter: 'B-', gpa: 2.7, settingId: 0 },
+                    { letter: 'C+', gpa: 2.3, settingId: 0 },
+                    { letter: 'C', gpa: 2.0, settingId: 0 },
+                    { letter: 'C-', gpa: 1.7, settingId: 0 },
+                    { letter: 'D+', gpa: 1.3, settingId: 0 },
+                    { letter: 'D', gpa: 1.0, settingId: 0 },
+                    { letter: 'F', gpa: 0.0, settingId: 0 }
 
-                const response = await fetch('/api/userdetails');
-                const data = await response.json();
-                setMessage(data.message);
-            } catch (error) {
-
-                console.error('Error fetching data:', error);
+                ]);
+            }
+            else {
+                setGradeScales(data);
             }
         };
         fetchData();
     }, []);
 
-
+    // Function to fetch user data
     useEffect(() => {
         const fetchData = async () => {
             const data = await getStudentData(params);
@@ -41,8 +58,14 @@ export default function Calculator({ params }: { params: string }) {
         fetchData();
     }, []);
 
+    // Function to identify the GPA by letter 
+    const findGPAByLetter = (letter: string): number | undefined => {
+        const setting = gradeScales.find(s => s.letter === letter);
+        return setting?.gpa ?? 0;
+    };
+
     // function to calculate the GPA logic and save it to db
-    const saveStudentT0DB =  async (updatedStudent: Student) => {
+    const saveStudentT0DB = async (updatedStudent: Student) => {
         // Function to calculate weighted and unweighted GPA for a semester
         // Variables to keep track of total points and credits
         let ftotalUnweightedPoints = 0;
@@ -51,14 +74,14 @@ export default function Calculator({ params }: { params: string }) {
 
 
         // Function to calculate weighted and unweighted GPA for a semester
-        const calculateGPA =  (semester: Semester) => {
+        const calculateGPA = (semester: Semester) => {
             let totalWeightedPoints = 0;
             let totalUnweightedPoints = 0;
             let totalCredits = 0;
             semester.course.forEach(course => {
-                const basePoints = gradePoints[course.courseGrade];
+                const basePoints = findGPAByLetter(course.courseGrade) ?? 0;
                 const extraPoints = getExtraPoints(course.courseType);
-                const credits = parseFloat(course.courseCredit);
+                const credits = parseFloat(course.courseCredit.toString());
                 totalUnweightedPoints += basePoints * credits;
                 totalWeightedPoints += (basePoints + extraPoints) * credits;
                 totalCredits += credits;
@@ -96,27 +119,26 @@ export default function Calculator({ params }: { params: string }) {
         console.log(updatedStudent);
         console.log(updatedStudent)
         //window.location.reload();
+        setErrorMessage("GPA Information saved to database.");
 
     };
 
-    //gpa calculator
-    const updateStudentData =  (updatedStudent: Student) => {
+    //function to calculate fresh gpa when a user changes the courses
+    const updateStudentData = (updatedStudent: Student) => {
 
         // Variables to keep track of total points and credits
         let ftotalUnweightedPoints = 0;
         let ftotalWeightedPoints = 0;
         let ftotalCredits = 0;
 
-
-        // Function to calculate weighted and unweighted GPA for a semester
         const calculateGPA = (semester: Semester) => {
             let totalWeightedPoints = 0;
             let totalUnweightedPoints = 0;
             let totalCredits = 0;
             semester.course.forEach(course => {
-                const basePoints = gradePoints[course.courseGrade];
+                const basePoints = findGPAByLetter(course.courseGrade) ?? 0;
                 const extraPoints = getExtraPoints(course.courseType);
-                const credits = parseFloat(course.courseCredit);
+                const credits = parseFloat(course.courseCredit.toString());
                 totalUnweightedPoints += basePoints * credits;
                 totalWeightedPoints += (basePoints + extraPoints) * credits;
                 totalCredits += credits;
@@ -127,6 +149,7 @@ export default function Calculator({ params }: { params: string }) {
             semester.semUnweightedGPA = totalCredits > 0 ? totalUnweightedPoints / totalCredits : 0;
             semester.semWeightedGPA = totalCredits > 0 ? totalWeightedPoints / totalCredits : 0;
         };
+
         const getExtraPoints = (courseType: any) => {
             switch (courseType) {
                 case 'AP':
@@ -137,8 +160,6 @@ export default function Calculator({ params }: { params: string }) {
                     return 0; // Regular courses don't have extra points
             }
         };
-
-
 
         // Calculate GPA for each semester
         updatedStudent.semester.forEach(semester => {
@@ -151,6 +172,7 @@ export default function Calculator({ params }: { params: string }) {
 
         // Set the student data in state (this does not update the database)
         setStudentData(updatedStudent);
+        setErrorMessage('');
     };
 
 
@@ -173,7 +195,12 @@ export default function Calculator({ params }: { params: string }) {
                 </div>
             </div>
             <div className="flex justify-left py-1 ">
-                {studentData ? <AAccordion student={studentData} onStudentUpdate={updateStudentData} saveStudentUpdate={saveStudentT0DB} /> : <p>Loading student data...</p>}
+                {studentData ? <AAccordion student={studentData} onStudentUpdate={updateStudentData} saveStudentUpdate={saveStudentT0DB} gradeScales={gradeScales} /> : <p>Loading student data...</p>}
+            </div>
+            <div>
+                {errorMessage && (
+                    <label className={`${color} `}>{errorMessage}</label>
+                )}
             </div>
         </main>
     )
