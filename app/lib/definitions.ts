@@ -36,3 +36,12 @@ export interface Settings {
   settingId:number;
 }
 
+
+export interface User {
+  id: number
+  name: string,
+  email: string,
+  password: string,
+  // Map other fields as necessary
+};
+

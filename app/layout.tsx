@@ -2,7 +2,7 @@ import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 import {Providers} from "./providers";
 
- 
+ // Component for teh root layout of the GPA Calcualtor
 export default function RootLayout({
   children,
 }: {

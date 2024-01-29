@@ -1,3 +1,5 @@
+// html page for help content
+
 export default  function Page() {
     
     return (

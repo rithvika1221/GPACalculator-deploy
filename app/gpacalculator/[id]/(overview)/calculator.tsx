@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 
 /**
  * Main Component for GPA Calculator 
+ * Overall GPA is calculated in this component and saved to the DB
   * @param {string} params  - this parameter represents the student id
  */
 export default function Calculator({ params }: { params: string }) {
@@ -71,6 +72,7 @@ export default function Calculator({ params }: { params: string }) {
         let ftotalUnweightedPoints = 0;
         let ftotalWeightedPoints = 0;
         let ftotalCredits = 0;
+        let isValid = true;
 
 
         // Function to calculate weighted and unweighted GPA for a semester
@@ -78,20 +80,42 @@ export default function Calculator({ params }: { params: string }) {
             let totalWeightedPoints = 0;
             let totalUnweightedPoints = 0;
             let totalCredits = 0;
-            semester.course.forEach(course => {
+    
+            for (const course of semester.course) {
+                const credits = parseFloat(course.courseCredit.toString());
+    
+                // Check if the course credit is within the valid range
+                if (credits < 0.0 || credits > 5.0) {
+                    isValid = false;
+                    setErrorMessage('Settings not saved to database. Credit must be a value between 0.0 and 5.0. Please change the values before saving the data.');
+                    setColor('text-red-600');
+                    return; // Exit the calculateGPA function if invalid data is found
+                }
+
+                if (course.courseName == '') {
+                    isValid = false;
+                    setErrorMessage('Course name cannot be blank. Please change the values before saving the data.');
+                    setColor('text-red-600');
+                    return; // Exit the calculateGPA function if invalid data is found
+                }
+    
                 const basePoints = findGPAByLetter(course.courseGrade) ?? 0;
                 const extraPoints = getExtraPoints(course.courseType);
-                const credits = parseFloat(course.courseCredit.toString());
+                
                 totalUnweightedPoints += basePoints * credits;
                 totalWeightedPoints += (basePoints + extraPoints) * credits;
                 totalCredits += credits;
-                ftotalUnweightedPoints += basePoints * credits;
-                ftotalWeightedPoints += (basePoints + extraPoints) * credits;
-                ftotalCredits += credits;
-            });
-            semester.semUnweightedGPA = totalCredits > 0 ? totalUnweightedPoints / totalCredits : 0;
-            semester.semWeightedGPA = totalCredits > 0 ? totalWeightedPoints / totalCredits : 0;
+            }
+    
+            if (isValid) {
+                ftotalUnweightedPoints += totalUnweightedPoints;
+                ftotalWeightedPoints += totalWeightedPoints;
+                ftotalCredits += totalCredits;
+                semester.semUnweightedGPA = totalCredits > 0 ? totalUnweightedPoints / totalCredits : 0;
+                semester.semWeightedGPA = totalCredits > 0 ? totalWeightedPoints / totalCredits : 0;
+            }
         };
+
         const getExtraPoints = (courseType: any) => {
             switch (courseType) {
                 case 'AP':
@@ -103,23 +127,23 @@ export default function Calculator({ params }: { params: string }) {
             }
         };
 
-
-
         // Calculate GPA for each semester
         updatedStudent.semester.forEach(semester => {
             calculateGPA(semester);
         });
-
-        // Calculate cumulative GPA
-        updatedStudent.studentWeightedGPA = ftotalCredits > 0 ? ftotalWeightedPoints / ftotalCredits : 0;
-        updatedStudent.studentUnweightedGPA = ftotalCredits > 0 ? ftotalUnweightedPoints / ftotalCredits : 0;
-
-        await saveStudentData(updatedStudent);
-        updateStudentData(updatedStudent);
-        console.log(updatedStudent);
-        console.log(updatedStudent)
-        //window.location.reload();
-        setErrorMessage("GPA Information saved to database.");
+       
+        if(isValid)
+        {
+            // Calculate cumulative GPA
+            updatedStudent.studentWeightedGPA = ftotalCredits > 0 ? ftotalWeightedPoints / ftotalCredits : 0;
+            updatedStudent.studentUnweightedGPA = ftotalCredits > 0 ? ftotalUnweightedPoints / ftotalCredits : 0;
+            await saveStudentData(updatedStudent);
+            updateStudentData(updatedStudent);
+            console.log(updatedStudent)
+            //window.location.reload();
+            setErrorMessage("GPA Information saved to database.");
+            setColor('text-green-600');
+        }
 
     };
 
@@ -131,6 +155,7 @@ export default function Calculator({ params }: { params: string }) {
         let ftotalWeightedPoints = 0;
         let ftotalCredits = 0;
 
+        // function to calculate each semester GPA
         const calculateGPA = (semester: Semester) => {
             let totalWeightedPoints = 0;
             let totalUnweightedPoints = 0;

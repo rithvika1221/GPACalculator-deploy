@@ -1,10 +1,11 @@
-import AcmeLogo from '../ui/acme-logo';
+import Logo from '../ui/acme-logo';
 import { auth, signOut } from '@/auth'; // Authentication utilities
 import { Link } from '@nextui-org/react'; // Next UI Link component
 import { HomeIcon, InformationCircleIcon, Cog8ToothIcon, PowerIcon } from '@heroicons/react/24/outline'; // Heroicons for UI elements
 import { lusitana } from '../ui/fonts'; // Custom font
 
 // Layout component with children props for nested content
+// This component define all the navigation links
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const { user } = await auth(); // Fetch user data using auth
 
@@ -12,7 +13,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     <>
     <div className={`${lusitana.className} flex flex-col items-center justify-center`}>
         <div className="flex justify-between  rounded-md bg-blue-500 text-white p-7  w-full md:w-3/5">
-          <div className='flex-1 py-3'><AcmeLogo /></div>
+          <div className='flex-1 py-3'><Logo /></div>
           <div className='text-xl flex-1'>Welcome: {user.name}</div>
           <div className='flex-1 flex items-strech'>
             <div className='flex-1'>

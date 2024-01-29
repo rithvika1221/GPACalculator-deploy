@@ -4,6 +4,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
+// this compnent provides the button which is used in the GPA calculator
 export function Button({ children, className, ...rest }: ButtonProps) {
   return (
     <button

@@ -13,6 +13,7 @@ import { signupStudent } from '../lib/data';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+// sign up form component
 export default function SignUpForm() {
     // Define the initial state for your form
     const initialState = {

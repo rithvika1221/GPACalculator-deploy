@@ -20,15 +20,7 @@ interface AccordionItemProps {
 }
 
 
-/**
- * Component for settings page.
- * This page allows users to customize and save GPA grade settings.
-// - `settings`: An array of `Settings` objects. These settings presumably include grade-to-GPA mappings.
-// - `semester`: An object representing the current semester's data, including courses and GPA.
-// - `semesterNumber`: A numeric identifier for the semester, used for display purposes.
-// - `updateSemester`: A function to update the semester's data when changes are made.
-// - `deleteSemester`: A function to delete the current semester.
- */
+// Accordion item component to manage each course
 const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semesterNumber, updateSemester, deleteSemester }) => {
 
   // state for isOpen
@@ -194,6 +186,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
                     <input
                       type="text"
                       value={course.courseName}
+                      maxLength={50}
                       onChange={(e) => handleCourseDetailChange(index, 'courseName', e.target.value)}
                       className="rounded-xl w-64 md:w-64 sm:w-32 text-sm"
                     />
@@ -220,7 +213,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
                   </td>
                   <td className='text-left align-middle'>
                     <input
-                      type="text"
+                      type="number"
                       value={course.courseCredit.toString()}
                       onChange={(e) => handleCourseDetailChange(index, 'courseCredit', e.target.value)}
                       onBlur={(e) => handleCourseDetailBlur(index, 'courseCredit', e.target.value)}
