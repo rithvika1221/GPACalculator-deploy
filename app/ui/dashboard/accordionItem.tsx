@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Semester, Course, Settings} from '@/app/lib/definitions';
-import { Grade,fetchSettings,gradePoints } from '@/app/lib/data';
+import { Semester, Course, Settings } from '@/app/lib/definitions';
+import { Grade, fetchSettings, gradePoints } from '@/app/lib/data';
 import { Button, Switch } from '@nextui-org/react';
 import { z } from 'zod';
 
@@ -48,7 +48,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
         return 0; // Regular courses don't have extra points
     }
   };
- 
+
   // Function to calculate the Semester GPA
   const calculateGPA = (semester: Semester) => {
     let totalWeightedPoints = 0;
@@ -136,42 +136,42 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
 
 
   return (
-    <div className="accordion-item mx-5">
+    <div className="accordion-item mx-2 sm:mx-5">
       {error && <p className="text-red-500">{error}</p>}
 
-      <div className="flex justify-between items-center space-x-4">
-        <div className="flex justify-between items-center space-x-4">
+      <div className="flex flex-wrap justify-between items-center space-x-2 sm:space-x-4">
+        <div className="flex flex-wrap justify-between items-center space-x-2 sm:space-x-4">
           <button className="accordion-title" onClick={toggleOpen}>
-            <h1 className="text-xl text-black mb-0">
+            <h1 className="text-lg sm:text-xl text-black mb-0">
               {semesterDisplayName}
-
             </h1>
           </button>
 
-          <h1 className="text-black mb-0">
-            Unweighted GPA: {semester?.semUnweightedGPA ? semester.semUnweightedGPA.toFixed(2) : 'N/A'}
-          </h1>
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 space-x-0 sm:space-x-2">
+            <h1 className="text-sm sm:text-base text-black mb-0">
+              Unweighted GPA: {semester?.semUnweightedGPA ? semester.semUnweightedGPA.toFixed(2) : 'N/A'}
+            </h1>
 
-          <h1 className="text-black mb-0">
-            Weighted GPA: {semester?.semWeightedGPA ? semester.semWeightedGPA.toFixed(2) : 'N/A'}
-          </h1>
+            <h1 className="text-sm sm:text-base text-black mb-0">
+              Weighted GPA: {semester?.semWeightedGPA ? semester.semWeightedGPA.toFixed(2) : 'N/A'}
+            </h1>
+          </div>
         </div>
 
         <div>
           <button className="accordion-title" onClick={toggleOpen}>
-            <h1 className="text-xl3 text-black mb-0">
+            <h1 className="text-xl text-black mb-0">
               {isOpen ? <span className='text-2xl'>&#8744;</span> : <span className='text-2xl'>&#60;</span>}
             </h1>
           </button>
         </div>
       </div>
 
-
       {isOpen && (
-        <div className="text-black overflow-x-auto ">
-         <table >
+        <div className="text-black overflow-x-auto">
+          <table className="w-full">
             <thead>
-              <tr className='text-black text-sm'>
+              <tr className='text-black text-xs sm:text-sm'>
                 <th className='text-left'>Course Name</th>
                 <th className='text-left'>Grade</th>
                 <th className='text-left'>Credit</th>
@@ -179,7 +179,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
                 <th className='text-left'></th>
               </tr>
             </thead>
-            <tbody className='text-black text-xs'>
+            <tbody className='text-black text-xs sm:text-sm'>
               {semester.course.map((course, index) => (
                 <tr key={index}>
                   <td className='text-left align-middle'>
@@ -188,12 +188,12 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
                       value={course.courseName}
                       maxLength={50}
                       onChange={(e) => handleCourseDetailChange(index, 'courseName', e.target.value)}
-                      className="rounded-xl w-64 md:w-64 sm:w-32 text-sm"
+                      className="rounded-xl w-full text-xs sm:text-sm"
                     />
                   </td>
                   <td className='text-left align-middle'>
                     <select
-                      className="rounded-xl w-36 text-sm"
+                      className="rounded-xl w-full text-xs sm:text-sm"
                       value={course.courseGrade}
                       onChange={(e) => handleCourseDetailChange(index, 'courseGrade', e.target.value)}
                     >
@@ -217,12 +217,12 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
                       value={course.courseCredit.toString()}
                       onChange={(e) => handleCourseDetailChange(index, 'courseCredit', e.target.value)}
                       onBlur={(e) => handleCourseDetailBlur(index, 'courseCredit', e.target.value)}
-                      className="rounded-xl w-36 text-sm"
+                      className="rounded-xl w-full text-xs sm:text-sm"
                     />
                   </td>
                   <td className='text-left align-middle'>
                     <select
-                      className="rounded-xl w-48 text-sm"
+                      className="rounded-xl w-full text-xs sm:text-sm"
                       value={course.courseType}
                       onChange={(e) => handleCourseDetailChange(index, 'courseType', e.target.value)}
                     >
@@ -238,17 +238,18 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
               ))}
             </tbody>
           </table>
-          <div>
-            <Button className="mt-4 bg-blue-100 text-white border border-black text-black" onClick={handleAddCourse}>
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
+            <Button className="bg-blue-100 text-black border border-black" onClick={handleAddCourse}>
               Add Course
             </Button>
-            <Button className="mt-4 bg-blue-100 text-white border border-black text-black" onClick={deleteSemester}>
+            <Button className="bg-blue-100 text-black border border-black" onClick={deleteSemester}>
               Delete Semester
             </Button>
           </div>
         </div>
       )}
     </div>
+
   );
 };
 

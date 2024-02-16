@@ -65,7 +65,7 @@ export default function Calculator({ params }: { params: string }) {
         return setting?.gpa ?? 0;
     };
 
-    // function to calculate the GPA logic and save it to db
+    // function to calculate the GPA logic and save it to database
     const saveStudentT0DB = async (updatedStudent: Student) => {
         // Function to calculate weighted and unweighted GPA for a semester
         // Variables to keep track of total points and credits
@@ -80,10 +80,10 @@ export default function Calculator({ params }: { params: string }) {
             let totalWeightedPoints = 0;
             let totalUnweightedPoints = 0;
             let totalCredits = 0;
-    
+
             for (const course of semester.course) {
                 const credits = parseFloat(course.courseCredit.toString());
-    
+
                 // Check if the course credit is within the valid range
                 if (credits < 0.0 || credits > 5.0) {
                     isValid = false;
@@ -98,15 +98,15 @@ export default function Calculator({ params }: { params: string }) {
                     setColor('text-red-600');
                     return; // Exit the calculateGPA function if invalid data is found
                 }
-    
+
                 const basePoints = findGPAByLetter(course.courseGrade) ?? 0;
                 const extraPoints = getExtraPoints(course.courseType);
-                
+
                 totalUnweightedPoints += basePoints * credits;
                 totalWeightedPoints += (basePoints + extraPoints) * credits;
                 totalCredits += credits;
             }
-    
+
             if (isValid) {
                 ftotalUnweightedPoints += totalUnweightedPoints;
                 ftotalWeightedPoints += totalWeightedPoints;
@@ -131,9 +131,8 @@ export default function Calculator({ params }: { params: string }) {
         updatedStudent.semester.forEach(semester => {
             calculateGPA(semester);
         });
-       
-        if(isValid)
-        {
+
+        if (isValid) {
             // Calculate cumulative GPA
             updatedStudent.studentWeightedGPA = ftotalCredits > 0 ? ftotalWeightedPoints / ftotalCredits : 0;
             updatedStudent.studentUnweightedGPA = ftotalCredits > 0 ? ftotalUnweightedPoints / ftotalCredits : 0;
@@ -148,6 +147,7 @@ export default function Calculator({ params }: { params: string }) {
     };
 
     //function to calculate fresh gpa when a user changes the courses
+    //actually you dont need two functions todo: merge these functions 
     const updateStudentData = (updatedStudent: Student) => {
 
         // Variables to keep track of total points and credits
@@ -203,15 +203,15 @@ export default function Calculator({ params }: { params: string }) {
 
     return (
         <main>
-            <div className="flex justify-between ">
-                <div>
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+                <div className="flex-1 min-w-0">
                     <Card
                         title="Unweighted GPA"
                         value={studentData?.studentUnweightedGPA ? studentData.studentUnweightedGPA.toFixed(2) : 'N/A'}
                         type="unWeighted"
                     />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                     <Card
                         title="Weighted GPA"
                         value={studentData?.studentWeightedGPA ? studentData.studentWeightedGPA.toFixed(2) : 'N/A'}
@@ -219,7 +219,7 @@ export default function Calculator({ params }: { params: string }) {
                     />
                 </div>
             </div>
-            <div className="flex justify-left py-1 ">
+            <div className="py-4">
                 {studentData ? <AAccordion student={studentData} onStudentUpdate={updateStudentData} saveStudentUpdate={saveStudentT0DB} gradeScales={gradeScales} /> : <p>Loading student data...</p>}
             </div>
             <div>

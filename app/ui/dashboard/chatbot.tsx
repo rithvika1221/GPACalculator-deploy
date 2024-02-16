@@ -29,7 +29,7 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isMinimized, toggleMinimize
     // Constructing the prompt for the OpenAI API
     var prompt = "This question is from a Chatbot inside a GPA Calculator.\n\n";
     prompt += "-Please answer questions related to the following topics only: High School courses, High School and College Education related questions, and GPA Calculation.\n\n";
-        prompt += "If the Student asks about topics other than the above mentioned topics, give a message that this question falls outside of the context. \n\n";
+    prompt += "If the Student asks about topics other than the above mentioned topics, give a message that this question falls outside of the context. \n\n";
 
     // Adding specific instructions if the question includes "gpa"
     if (question.toLowerCase().includes("gpa")) {

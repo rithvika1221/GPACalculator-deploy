@@ -71,13 +71,12 @@ const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate, saveStu
   };
 
   return (
-    <div className='rounded-t-lg bg-blue-100 dark:border-neutral-600 dark:bg-blue-100  text-black w-full'>
+    <div className='rounded-t-lg bg-blue-100 dark:border-neutral-600 dark:bg-blue-100 text-black w-full'>
       {error && <p className="text-red-500">{error}</p>} {/* Display error message if it exists */}
 
       {semesters.map((semester, index) => (
         <React.Fragment key={index}>
-
-          <div className="mb-4  rounded-lg overflow-hidden">
+          <div className="mb-4 rounded-lg overflow-hidden">
             <AccordionItem
               settings={gradeScales}
               semester={semester}
@@ -89,28 +88,31 @@ const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate, saveStu
           {index < semesters.length - 1 && <Divider className="my-4" />}
         </React.Fragment>
       ))}
-      <div >
-        <div >
-
+      <div>
+        <div className="flex flex-wrap justify-center gap-4">
           <button
             type="button"
-            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-px w-48"
+            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-4 w-full sm:w-48"
             onClick={handleAddSemester}>
-            <PlusIcon className='bg-blue-100 text-black h-5 w-5 -my-3'></PlusIcon>
-            <p className='-m-5'>Add Semester</p>
-
+            <div className="flex justify-center items-center">
+              <PlusIcon className='text-black h-5 w-5'></PlusIcon>
+              <p>Add Semester</p>
+            </div>
           </button>
           <button
             type="button"
-            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-px w-48"
+            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-4 w-full sm:w-48"
             onClick={saveStudent}>
-            <CircleStackIcon className='bg-blue-100 text-black h-5 w-5 -my-3'></CircleStackIcon>
-            <p className='-m-5'>Save Data</p>
+            <div className="flex justify-center items-center">
+              <CircleStackIcon className='text-black h-5 w-5'></CircleStackIcon>
+              <p>Save Data</p>
+            </div>
           </button>
-          <ChatbotModal isMinimized={isMinimized} toggleMinimize={toggleMinimize} studentData={student} />
         </div>
+        <ChatbotModal isMinimized={isMinimized} toggleMinimize={toggleMinimize} studentData={student} />
       </div>
     </div>
+
   );
 };
 export default Accordion;
