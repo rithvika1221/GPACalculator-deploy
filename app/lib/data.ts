@@ -15,6 +15,17 @@ export const gradePoints: { [key in Grade]: number } = {
     'C+': 2.3, 'C': 2.0, 'C-': 1.7, 'D': 1.3, 'D+': 1.0,  'F': 0.0,
 };
 
+// Assuming you have the username and password
+const username = 'rithvika';
+const password = 'seattle@123';
+// Encode the username and password into a base64 string
+const base64 = Buffer.from(`${username}:${password}`).toString('base64');
+// Prepare the headers object including the Authorization header for Basic Auth
+const authHeaders = {
+    'Authorization': `Basic ${base64}`,
+    'Content-Type': 'application/json'
+};
+
 // Function to sign up a student
 export async function signupStudent(formData: FormData) {
   try {
@@ -32,9 +43,7 @@ export async function signupStudent(formData: FormData) {
     // Sending POST request to create a new student
     const response = await fetch(apiEndpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: authHeaders,
       body: JSON.stringify(studentData),
     });
     
@@ -63,7 +72,7 @@ export async function saveSettings(settings: Settings[], studentId: string) {
     const settingsUrl = `${apiEndpoint}/${studentId}/settings`;
 
     // Fetch existing settings once, outside the loop
-    const existingSettingsResponse = await fetch(settingsUrl);
+    const existingSettingsResponse = await fetch(settingsUrl, {   headers: authHeaders});
     let existingSettings = [];
 
     if (existingSettingsResponse.ok) {
@@ -86,7 +95,7 @@ export async function saveSettings(settings: Settings[], studentId: string) {
       // Sending request to update or create the setting
       const settingResponse = await fetch(url, {
         method: method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders,
         body: JSON.stringify(setting)
       });
 
@@ -113,14 +122,14 @@ export async function saveSettings(settings: Settings[], studentId: string) {
 export async function getStudentData(id: string) {
   try {
     // Fetching student's basic data
-    const studentResponse = await fetch(`${apiEndpoint}/${id}`);
+    const studentResponse = await fetch(`${apiEndpoint}/${id}`, {   headers: authHeaders});
     if (!studentResponse.ok) {
       throw new Error(`Error: ${studentResponse.status}`);
     }
     const studentData = await studentResponse.json();
 
     // Fetching semesters for the student
-    const semesterResponse = await fetch(`${apiEndpoint}/${id}/semesters`);
+    const semesterResponse = await fetch(`${apiEndpoint}/${id}/semesters`, {   headers: authHeaders});
     if (!semesterResponse.ok) {
       throw new Error(`Error: ${semesterResponse.status}`);
     }
@@ -129,7 +138,7 @@ export async function getStudentData(id: string) {
 
     // Fetching courses for each semester
     for (const semester of semesterData) {
-      const courseResponse = await fetch(`${apiEndpoint}/${id}/semesters/${semester.semesterId}/courses`);
+      const courseResponse = await fetch(`${apiEndpoint}/${id}/semesters/${semester.semesterId}/courses`, {   headers: authHeaders});
       if (!courseResponse.ok) {
         throw new Error(`Error: ${courseResponse.status}`);
       }
@@ -155,7 +164,7 @@ export async function saveStudentData(student: Student) {
     // Sending request to save or update student
     const studentResponse = await fetch(studentUrl, {
         method: studentMethod,
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders,
         body: JSON.stringify(student)
     });
 
@@ -166,17 +175,20 @@ export async function saveStudentData(student: Student) {
     const savedStudent = await studentResponse.json();
 
     // Fetching existing semesters for the student
-    const existingSemesters = await fetch(`${apiEndpoint}/${savedStudent.studentId}/semesters`).then((response) => response.json());
+    const existingSemesters = await fetch(`${apiEndpoint}/${savedStudent.studentId}/semesters`, {   headers: authHeaders}).then((response) => response.json());
 
     // Deleting semesters that no longer exist
     for (const existingSemester of existingSemesters) {
         if (!student.semester.some(s => s.semesterId === existingSemester.semesterId)) {
 
-          const responseCoursses =  await fetch(`${apiEndpoint}/${savedStudent.studentId}/semesters/${existingSemester.semesterId}/courses`, {
-            method: 'DELETE'
+          const responseCoursses =  await fetch(`${apiEndpoint}/${savedStudent.studentId}/semesters/${existingSemester.semesterId}/courses`, 
+          {
+            method: 'DELETE',
+            headers: authHeaders
         });
             const response =  await fetch(`${apiEndpoint}/${savedStudent.studentId}/semesters/${existingSemester.semesterId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: authHeaders
             });
         }
     }
@@ -190,7 +202,7 @@ export async function saveStudentData(student: Student) {
 
         const semesterResponse = await fetch(semesterUrl, {
             method: semesterMethod,
-            headers: { 'Content-Type': 'application/json' },
+            headers: authHeaders,
             body: JSON.stringify(semester)
         });
 
@@ -201,13 +213,14 @@ export async function saveStudentData(student: Student) {
         const savedSemester = await semesterResponse.json();
 
         // Fetching existing courses for the semester
-        const existingCourses = await fetch(`${apiEndpoint}/${savedStudent.studentId}/semesters/${savedSemester.semesterId}/courses`).then((response) => response.json());
+        const existingCourses = await fetch(`${apiEndpoint}/${savedStudent.studentId}/semesters/${savedSemester.semesterId}/courses`, {   headers: authHeaders}).then((response) => response.json());
 
         // Deleting courses that no longer exist
         for (const existingCourse of existingCourses) {
             if (!semester.course.some(c => c.courseId === existingCourse.courseId)) {
                 await fetch(`${apiEndpoint}/${savedStudent.studentId}/semesters/${savedSemester.semesterId}/courses/${existingCourse.courseId}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: authHeaders
                 });
             }
         }
@@ -221,7 +234,7 @@ export async function saveStudentData(student: Student) {
 
             const courseResponse = await fetch(courseUrl, {
                 method: courseMethod,
-                headers: { 'Content-Type': 'application/json' },
+                headers: authHeaders,
                 body: JSON.stringify(course)
             });
 
@@ -244,7 +257,7 @@ export async function saveStudentData(student: Student) {
 // Function to fetch settings for a student
 export async function fetchSettings(id:string) {
   try {
-    const response = await fetch(`http://localhost:8085/students/${id}/settings`);
+    const response = await fetch(`http://localhost:8085/students/${id}/settings`, {   headers: authHeaders});
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }
@@ -258,7 +271,7 @@ export async function fetchSettings(id:string) {
 // Function to fetch sutendt by email this is used in authentication.
 export async function fetchStudentByEamil(email: string): Promise<User | undefined> {
   try {
-    const response = await fetch(`http://localhost:8085/students?$filter=email eq '${email}'`);
+    const response = await fetch(`http://localhost:8085/students?$filter=email eq '${email}'`, {   headers: authHeaders});
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }
@@ -291,6 +304,7 @@ export async function deleteStudentData(studentId: string) {
   try {
     const response = await fetch(`${apiEndpoint}/${studentId}`, { // Adjust endpoint as needed
       method: 'DELETE',
+      headers: authHeaders
     });
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
@@ -304,7 +318,7 @@ export async function deleteStudentData(studentId: string) {
 // Function to get semesters of a student
 export async function fetchSemesterStudentData() {
   try {
-    const response = await fetch('http://localhost:8085/students/8/semesters');
+    const response = await fetch('http://localhost:8085/students/8/semesters', {   headers: authHeaders});
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }
@@ -318,7 +332,7 @@ export async function fetchSemesterStudentData() {
 // function get the courses for the semsester
 export async function fetchCourseSemesterData() {
   try {
-    const response = await fetch('http://localhost:8085/students/8/semesters/16/courses');
+    const response = await fetch('http://localhost:8085/students/8/semesters/16/courses', {   headers: authHeaders});
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }

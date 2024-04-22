@@ -23,6 +23,7 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isMinimized, toggleMinimize
   // handleSubmit function to handle the submission of the user's question
   const handleSubmit = async (): Promise<void> => {
     console.log('handleSubmit called'); // Debug log
+    console.log(student);
     setLoading(true); // Set loading state to true
     updateStudentData(studentData); // Update student data
 

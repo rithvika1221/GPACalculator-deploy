@@ -46,7 +46,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
               }}
               className='w-full md:w-auto'>
               <button
-                className='flex w-full md:w-auto h-[36px] items-center justify-center gap-2 rounded-md bg-blue-50 p-3 text-sm font-medium hover:bg-blue-100 hover:text-blue-600'>
+                className='flex w-full md:w-auto h-[36px] items-center justify-center gap-2 rounded-md bg-blue-50 text-blue-600 p-3 text-sm font-medium hover:bg-blue-100 hover:text-blue-600'>
                 <PowerIcon className="w-6" />
                 <p>Sign Out</p>
               </button>

@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import { Student, Semester, Settings } from '@/app/lib/definitions';
 import dynamic from 'next/dynamic';
 import { Divider } from '@nextui-org/react';
-import { PlusIcon, CircleStackIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, CircleStackIcon, ArrowDownOnSquareIcon } from '@heroicons/react/24/outline';
 import ChatbotModal from './chatbot';
+import * as XLSX from 'xlsx';
 
 // Dynamically import AccordionItem for better performance (SSR disabled)
 const AccordionItem = dynamic(() => import('./accordionItem'), { ssr: false });
@@ -70,6 +71,49 @@ const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate, saveStu
 
   };
 
+  
+
+function downloadGPAData() {
+  // Create a new workbook
+  const wb = XLSX.utils.book_new();
+  var semesterCount = 1;
+
+  student.semester.forEach(semester => {
+    // Each semester as a sheet
+    const ws_data = [
+      ['Course Name', 'Course Grade', 'Course Credit', 'Course Type']
+    ];
+
+    semester.course.forEach(course => {
+      ws_data.push([course.courseName, course.courseGrade, course.courseCredit.toString(), course.courseType]);
+    });
+
+    // Add weighted and unweighted GPA at the end of the sheet
+    ws_data.push(['', '', '', '']);
+    ws_data.push(['Semester Weighted GPA', semester.semWeightedGPA.toString()]);
+    ws_data.push(['Semester Unweighted GPA', semester.semUnweightedGPA.toString()]);
+
+    // Create worksheet
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, `Semester ${semesterCount}`);
+    semesterCount++;
+  });
+
+  // Add overall GPA as a separate sheet
+  const gpaSheetData = [
+    ['Overall Weighted GPA', student.studentWeightedGPA],
+    ['Overall Unweighted GPA', student.studentUnweightedGPA]
+  ];
+  const gpaWs = XLSX.utils.aoa_to_sheet(gpaSheetData);
+  XLSX.utils.book_append_sheet(wb, gpaWs, 'Overall GPA');
+
+  // Generate Excel file and trigger download
+  XLSX.writeFile(wb, `${student.studentName}'s GPA Record.xlsx`);
+}
+
+
   return (
     <div className='rounded-t-lg bg-blue-100 dark:border-neutral-600 dark:bg-blue-100 text-black w-full'>
       {error && <p className="text-red-500">{error}</p>} {/* Display error message if it exists */}
@@ -106,6 +150,15 @@ const Accordion: React.FC<AccordionProps> = ({ student, onStudentUpdate, saveStu
             <div className="flex justify-center items-center">
               <CircleStackIcon className='text-black h-5 w-5'></CircleStackIcon>
               <p>Save Data</p>
+            </div>
+          </button>
+          <button
+            type="button"
+            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-4 w-full sm:w-48"
+            onClick={downloadGPAData}>
+            <div className="flex justify-center items-center">
+              <ArrowDownOnSquareIcon className='text-black h-5 w-5'></ArrowDownOnSquareIcon>
+              <p>Download Data</p>
             </div>
           </button>
         </div>
