@@ -103,10 +103,10 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isMinimized, toggleMinimize
     <div className="fixed bottom-4 right-4 flex flex-col items-end bg-white p-4 rounded-lg shadow-lg max-w-md z-50">
   {!isMinimized && (
     <div className="w-full flex flex-col max-h-[66vh] overflow-y-auto">
-      <h2 className="text-lg font-bold mb-2">GPA Bot</h2>
-      <div className="flex-grow overflow-y-auto bg-gray-100 p-2 whitespace-pre-line">
+      <h2 className="text-lg font-bold mb-2 text-theme-one">GPA Bot</h2>
+      <div className="flex-grow overflow-y-auto bg-white p-2 whitespace-pre-line">
         {messages.map((message, index) => (
-          <div key={index} className="p-2 bg-blue-200 my-2 rounded">{message}</div>
+          <div key={index} className="p-2 bg-theme-five text-theme-one my-2 rounded">{message}</div>
         ))}
         {isLoading && <div className="flex justify-center items-center">
           {/* Example spinner animation */}
@@ -121,14 +121,14 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isMinimized, toggleMinimize
           value={question}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setQuestion(e.target.value)}
           placeholder="Ask about GPA..."
-          className="border-2 border-gray-300 rounded p-2 flex-grow mr-2"
+          className="border-2 border-gray-300 rounded p-2 flex-grow mr-2 text-theme-one"
           disabled={isLoading} // Disable when loading
           onKeyPress={handleKeyPress}
         />
         <button
           type="button"
           onClick={handleSubmit}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          className="px-4 py-2 bg-gradient-to-b text-white rounded"
           disabled={isLoading} // Disable when loading
         >
           Send
@@ -137,7 +137,7 @@ const ChatbotModal: React.FC<ChatbotModalProps> = ({ isMinimized, toggleMinimize
     </div>
   )}
 
-  <button onClick={toggleMinimize} className="mt-2 text-sm underline">
+  <button onClick={toggleMinimize} className="mt-2 text-sm underline text-theme-one">
     {isMinimized ? 'Open Chat' : 'Minimize Chat'}
   </button>
 </div>

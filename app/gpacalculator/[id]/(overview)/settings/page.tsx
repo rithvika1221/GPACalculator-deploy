@@ -55,10 +55,16 @@ export default function Page({ params }: { params: { id: string } }) {
 
         return (
             <button type="submit" aria-disabled={pending}
-                className="mt-4 bg-blue-500 text-black border border-black rounded-lg h-10 py-1 px-px w-48">
-                <CircleStackIcon className='bg-blue-500 text-black h-5 w-5 -my-3'></CircleStackIcon>
-                <p className='-m-5'>Save Data</p>
-            </button>
+            className="bg-custom-one hover:bg-theme-three text-theme-one border border-theme-one rounded-lg w-1/4 flex items-center justify-center space-x-2" >
+        <CircleStackIcon className='text-theme-one h-10     w-5' />
+        <span>Save Data</span>
+    </button>
+
+            // <button type="submit" aria-disabled={pending}
+            // className="bg-custom-one hover:bg-theme-three text-theme-one border border-theme-one py-1 px-3 rounded-lg">
+            //     <CircleStackIcon className='bg-blue-500 text-black h-5 w-5 -my-3'></CircleStackIcon>
+            //     <p className='-m-5'>Save Data</p>
+            // </button>
 
         )
     }
@@ -96,46 +102,52 @@ export default function Page({ params }: { params: { id: string } }) {
 
 
     return (
-        <div className="flex flex-col items-center justify-top min-h-screen px-4 w-full md:w-3/5 md:ml-[175px]">
-            <h1 className="mb-4 text-3xl font-extrabold text-gray-900 md:text-5xl pl-150">GPA Grade Settings</h1>
-            <form onSubmit={handleSubmit} className="w-full">
-                <div className="overflow-x-auto w-full">
-                    <table className="w-full text-left ">
-                        <thead>
-                            <tr>
-                                <th className='w-1/3 md:w-40 text-center'>Grade</th>
-                                <th className='w-2/3 md:w-64 text-center'>GPA Scale</th>
+        <div className="rounded-t-lg bg-blue-100 dark:border-neutral-600 dark:bg-custom-green text-theme-one w-full flex flex-col items-center justify-center">
+        <h1 className="mb-4 text-3xl font-extrabold md:text-5xl text-center">GPA Grade Settings</h1>
+        <form onSubmit={handleSubmit} className="w-full">
+            <div className="overflow-x-auto w-full bg-theme-five">
+                <table className="w-full text-left">
+                    <thead>
+                        <tr>
+                            <th className="w-1/3 md:w-40 text-center">Grade</th>
+                            <th className="w-2/3 md:w-64 text-center  w-full flex flex-col items-center justify-center">GPA Scale</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {gradeScales.map((scale, index) => (
+                            <tr key={index}>
+                                <td>
+                                    <div className="rounded-2xl h-10 flex justify-center items-center">
+                                        <div>{scale.letter}</div>
+                                    </div>
+                                </td>
+                                <td className='w-full flex flex-col items-left justify-center'>
+                                    <input
+                                        type="number"
+                                        id={`gpa-${index}`}
+                                        className="rounded-lg w-1/4 text-xs sm:text-sm p-2"
+                                        value={scale.gpa}
+                                        onChange={(e) => handleGradeChange(index, 'gpa', parseFloat(e.target.value))}
+                                    />
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {gradeScales.map((scale, index) => (
-                                <tr key={index}>
-                                    <td><div className='rounded-2xl bg-blue-100 h-10 flex justify-center items-center'><div>{scale.letter}</div></div></td>
-                                    <td>
-                                        <input
-                                            type="number"
-                                            id={`gpa-${index}`}
-                                            className="block w-full md:w-64 border rounded-xl bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                                            value={scale.gpa}
-                                            onChange={(e) => handleGradeChange(index, 'gpa', parseFloat(e.target.value))}
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div className='pt-6 flex justify-center'>
-                    <SubmitButton />
-                </div>
-                <div>
-                    {errorMessage && (
-                        <label className={`${color} `}>{errorMessage}</label>
-                    )}
-                </div>
-            </form>
-        </div>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+    
+            <div className="pt-10 flex justify-center">
+                <SubmitButton />
+            </div>
+    
+            <div>
+                {errorMessage && (
+                    <label className={`${color}`}>{errorMessage}</label>
+                )}
+            </div>
+        </form>
+    </div>    
+    
 
     );
 };

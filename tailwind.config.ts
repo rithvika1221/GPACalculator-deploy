@@ -13,12 +13,25 @@ const config: Config = {
       gridTemplateColumns: {
         '13': 'repeat(13, minmax(0, 1fr))',
       },
+      backgroundImage: {
+        'gradient-to-r': 'linear-gradient(to right, #3d52a0, #3d52a0)',
+        'gradient-to-b': 'linear-gradient(to right, #7091e6, #7091e6)'
+      },
       colors: {
         blue: {
           400: '#2589FE',
           500: '#0070F3',
           600: '#2F6FEB',
         },
+        theme: {
+          one: '#3d52a0',
+          two: '#7091e6',
+          three: '#8697c4',
+          four:'#abdbda',
+          five:'#ede8f5'
+        },
+        'custom-green': '#ede8f5',
+        'custom-button': '#edf7f6',
       },
     },
     keyframes: {

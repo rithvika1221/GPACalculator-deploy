@@ -42,13 +42,13 @@ export function Card({
 
   // Returning a div that contains the icon (if it exists) and the title and value in stylized text.
   return (
-    <div className="rounded-xl bg-blue-500 shadow-sm h-20 ">
-      <div className="flex p-5 ">
+    <div className="rounded-xl bg-gradient-to-r shadow-sm h-15 ">
+      <div className="flex p-2 ">
         {/* Conditionally rendering the icon based on whether it's defined in the iconMap */}
-        {Icon ? <Icon className="h-5 w-5 text-white" /> : null}
+        {Icon ? <Icon className="h-5 w-5 text-white py-0" /> : null}
 
         {/* Displaying the title and value passed to the Card component. The text is stylized to be bold and white. */}
-        <h1 className="px-2 text-xl font-bold text-white md:text-xl lg:text-xl">{title}: {value}</h1>
+        <h1 className="px-1 text-xl font-bold text-white md:text-xl lg:text-xl">{title}: {value}</h1>
       </div>
     </div>
   );

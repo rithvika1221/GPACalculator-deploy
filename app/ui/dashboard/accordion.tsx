@@ -115,12 +115,12 @@ function downloadGPAData() {
 
 
   return (
-    <div className='rounded-t-lg bg-blue-100 dark:border-neutral-600 dark:bg-blue-100 text-black w-full'>
+    <div className='rounded-t-lg bg-blue-100 dark:border-neutral-600 dark:bg-custom-green text-black w-full'>
       {error && <p className="text-red-500">{error}</p>} {/* Display error message if it exists */}
 
       {semesters.map((semester, index) => (
         <React.Fragment key={index}>
-          <div className="mb-4 rounded-lg overflow-hidden">
+          <div className="mb-2 rounded-lg overflow-hidden">
             <AccordionItem
               settings={gradeScales}
               semester={semester}
@@ -129,14 +129,14 @@ function downloadGPAData() {
               deleteSemester={() => deleteSemester(index)}
             />
           </div>
-          {index < semesters.length - 1 && <Divider className="my-4" />}
+          {index < semesters.length - 1 && <Divider className="my-1" />}
         </React.Fragment>
       ))}
       <div>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-3">
           <button
             type="button"
-            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-4 w-full sm:w-48"
+            className="bg-custom-one hover:bg-theme-three text-theme-one border border-theme-one py-1 px-4 rounded-lg"
             onClick={handleAddSemester}>
             <div className="flex justify-center items-center">
               <PlusIcon className='text-black h-5 w-5'></PlusIcon>
@@ -145,7 +145,7 @@ function downloadGPAData() {
           </button>
           <button
             type="button"
-            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-4 w-full sm:w-48"
+            className="bg-custom-one hover:bg-theme-three text-theme-one border border-theme-one py-1 px-4 rounded-lg"
             onClick={saveStudent}>
             <div className="flex justify-center items-center">
               <CircleStackIcon className='text-black h-5 w-5'></CircleStackIcon>
@@ -154,7 +154,7 @@ function downloadGPAData() {
           </button>
           <button
             type="button"
-            className="mt-4 bg-blue-100 text-black border border-black rounded-lg h-10 py-1 px-4 w-full sm:w-48"
+            className="bg-custom-one hover:bg-theme-three text-theme-one border border-theme-one py-1 px-4 rounded-lg"
             onClick={downloadGPAData}>
             <div className="flex justify-center items-center">
               <ArrowDownOnSquareIcon className='text-black h-5 w-5'></ArrowDownOnSquareIcon>

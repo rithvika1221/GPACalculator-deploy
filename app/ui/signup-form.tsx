@@ -43,7 +43,7 @@ export default function SignUpForm() {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-3">
-            <div className="flex-1 rounded-lg bg-blue-50 px-6 pb-4 pt-8">
+            <div className="flex-1  rounded-lg bg-theme-five px-6 pb-4 pt-8">
                 <h1 className={`${lusitana.className} mb-3 text-2xl`}>
                     Please provide the details to singup.
                 </h1>
@@ -130,8 +130,8 @@ function LoginButton() {
     const { pending } = useFormStatus();
 
     return (
-        <Button className="mt-4 w-full bg-blue-500" aria-disabled={pending} >
-            Sign up <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50 bg-blue-500" />
+        <Button className="mt-4 w-full bg-gradient-to-b" aria-disabled={pending} >
+            Sign up <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50 bg-gradient-to-b" />
         </Button>
     );
 }

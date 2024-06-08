@@ -1,6 +1,6 @@
 export default function Page() {
     return (
-        <main className="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-lg mt-10">
+        <main className="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-lg mt-10 bg-theme-five text-theme-one">
             <section className="mb-8">
                 <h1 className="text-2xl font-bold mb-5">Understanding GPA (Grade Point Average)</h1>
                 <p>

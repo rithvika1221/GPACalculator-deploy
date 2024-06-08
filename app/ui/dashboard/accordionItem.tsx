@@ -136,70 +136,62 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
 
 
   return (
-    <div className="accordion-item mx-2 sm:mx-5">
-      {error && <p className="text-red-500">{error}</p>}
-
-      <div className="flex flex-wrap justify-between items-center space-x-2 sm:space-x-4">
-        <div className="flex flex-wrap justify-between items-center space-x-2 sm:space-x-4">
-          <button className="accordion-title" onClick={toggleOpen}>
-            <h1 className="text-lg sm:text-xl text-black mb-0">
-              {semesterDisplayName}
-            </h1>
-          </button>
-
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 space-x-0 sm:space-x-2">
-            <h1 className="text-sm sm:text-base text-black mb-0">
-              Unweighted GPA: {semester?.semUnweightedGPA ? semester.semUnweightedGPA.toFixed(2) : 'N/A'}
-            </h1>
-
-            <h1 className="text-sm sm:text-base text-black mb-0">
-              Weighted GPA: {semester?.semWeightedGPA ? semester.semWeightedGPA.toFixed(2) : 'N/A'}
-            </h1>
-          </div>
-        </div>
-
-        <div>
-          <button className="accordion-title" onClick={toggleOpen}>
-            <h1 className="text-xl text-black mb-0">
-              {isOpen ? <span className='text-2xl'>&#8744;</span> : <span className='text-2xl'>&#60;</span>}
-            </h1>
-          </button>
-        </div>
+    <div className="accordion-item mx-2 sm:mx-5 my-2">
+    {error && <p className="text-red-500">{error}</p>}
+  
+    <div className="flex justify-between items-center border-b-2 border-gray-200 py-0">
+      <button className="accordion-title flex items-center space-x-2" onClick={toggleOpen}>
+        <h1 className="text-lg sm:text-xl font-semibold text-theme-one">
+          {semesterDisplayName}
+        </h1>
+        <span className="text-gray-500 text-sm sm:text-base font-bold">
+          {isOpen ? <span className='font-bold'>&#8744;</span> : <span>&#60;</span>}
+        </span>
+      </button>
+  
+      <div className="flex items-center space-x-4">
+        <h2 className="text-sm sm:text-base text-theme-one font-bold">
+          Unweighted GPA: {semester?.semUnweightedGPA ? semester.semUnweightedGPA.toFixed(2) : 'N/A'}
+        </h2>
+        <h2 className="text-sm sm:text-base text-theme-one font-bold">
+          Weighted GPA: {semester?.semWeightedGPA ? semester.semWeightedGPA.toFixed(2) : 'N/A'}
+        </h2>
       </div>
-
-      {isOpen && (
-        <div className="text-black overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className='text-black text-xs sm:text-sm'>
-                <th className='text-left'>Course Name</th>
-                <th className='text-left'>Grade</th>
-                <th className='text-left'>Credit</th>
-                <th className='text-left'>Type</th>
-                <th className='text-left'></th>
-              </tr>
-            </thead>
-            <tbody className='text-black text-xs sm:text-sm'>
-              {semester.course.map((course, index) => (
-                <tr key={index}>
-                  <td className='text-left align-middle'>
-                    <input
-                      type="text"
-                      value={course.courseName}
-                      maxLength={50}
-                      onChange={(e) => handleCourseDetailChange(index, 'courseName', e.target.value)}
-                      className="rounded-xl w-full text-xs sm:text-sm"
-                    />
-                  </td>
-                  <td className='text-left align-middle'>
-                    <select
-                      className="rounded-xl w-full text-xs sm:text-sm"
-                      value={course.courseGrade}
-                      onChange={(e) => handleCourseDetailChange(index, 'courseGrade', e.target.value)}
-                    >
-                      <option value="A+">A+</option>
-                      <option value="A">A</option>
-                      <option value="A-">A-</option>
+    </div>
+  
+    {isOpen && (
+      <div className="overflow-x-auto mt-4">
+        <table className="w-full text-xs sm:text-sm text-theme-one">
+          <thead>
+            <tr className='border-b'>
+              <th className='text-left '>Course Name</th>
+              <th className='text-left'>Grade</th>
+              <th className='text-left'>Credit</th>
+              <th className='text-left'>Type</th>
+              <th className='text-left'></th>
+            </tr>
+          </thead>
+          <tbody>
+            {semester.course.map((course, index) => (
+              <tr key={index} className="hover:bg-gray-100">
+                <td className='py-1'>
+                  <input
+                    type="text"
+                    value={course.courseName}
+                    maxLength={50}
+                    onChange={(e) => handleCourseDetailChange(index, 'courseName', e.target.value)}
+                    className="rounded-lg w-full text-xs sm:text-sm p-2"
+                  />
+                </td>
+                <td>
+                  <select
+                    className="rounded-lg w-full p-2 text-xs sm:text-sm "
+                    value={course.courseGrade}
+                    onChange={(e) => handleCourseDetailChange(index, 'courseGrade', e.target.value)}
+                  >
+                    <option value="A+">A+</option>
+                    <option value="A">A</option>
+                    <option value="A-">A-</option>
                       <option value="B+">B+</option>
                       <option value="B">B</option>
                       <option value="B-">B-</option>
@@ -209,47 +201,49 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
                       <option value="D+">D+</option>
                       <option value="D">D</option>
                       <option value="F">F</option>
-                    </select>
-                  </td>
-                  <td className='text-left align-middle'>
-                    <input
-                      type="number"
-                      value={course.courseCredit.toString()}
-                      onChange={(e) => handleCourseDetailChange(index, 'courseCredit', e.target.value)}
-                      onBlur={(e) => handleCourseDetailBlur(index, 'courseCredit', e.target.value)}
-                      className="rounded-xl w-full text-xs sm:text-sm"
-                    />
-                  </td>
-                  <td className='text-left align-middle'>
-                    <select
-                      className="rounded-xl w-full text-xs sm:text-sm"
-                      value={course.courseType}
-                      onChange={(e) => handleCourseDetailChange(index, 'courseType', e.target.value)}
-                    >
-                      <option value="Honors">Honors</option>
-                      <option value="AP">AP</option>
-                      <option value="Regular">Regular</option>
-                    </select>
-                  </td>
-                  <td className='text-left align-middle'>
-                    <button onClick={() => handleCourseDelete(index)}>🗑️</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-            <Button className="bg-blue-100 text-black border border-black" onClick={handleAddCourse}>
-              Add Course
-            </Button>
-            <Button className="bg-blue-100 text-black border border-black" onClick={deleteSemester}>
-              Delete Semester
-            </Button>
-          </div>
+                  </select>
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    value={course.courseCredit.toString()}
+                    onChange={(e) => handleCourseDetailChange(index, 'courseCredit', e.target.value)}
+                    onBlur={(e) => handleCourseDetailBlur(index, 'courseCredit', e.target.value)}
+                    className="rounded-lg w-full p-2 text-xs sm:text-sm"
+                  />
+                </td>
+                <td>
+                  <select
+                    className="rounded-lg w-full p-2 text-xs sm:text-sm"
+                    value={course.courseType}
+                    onChange={(e) => handleCourseDetailChange(index, 'courseType', e.target.value)}
+                     >
+                    <option value="Honors">Honors</option>
+                    <option value="AP">AP</option>
+                    <option value="Regular">Regular</option>
+                  </select>
+                </td>
+                <td>
+                  <button onClick={() => handleCourseDelete(index)} className="text-red-500 hover:text-red-700">
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="flex space-x-2 mt-1">
+          <button className="bg-custom-one hover:bg-theme-three text-theme-one border border-theme-one py-1 px-3 rounded-lg" onClick={handleAddCourse}>
+            Add Course
+          </button>
+          <button className="bg-custom-one hover:bg-theme-three text-theme-one border border-theme-one py-1 px-3 rounded-lg" onClick={deleteSemester}>
+            Delete Semester
+          </button>
         </div>
-      )}
-    </div>
-
+      </div>
+    )}
+  </div>
+  
   );
 };
 

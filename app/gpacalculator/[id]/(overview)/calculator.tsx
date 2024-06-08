@@ -203,7 +203,7 @@ export default function Calculator({ params }: { params: string }) {
 
     return (
         <main>
-            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+            <div className="flex flex-wrap justify-center gap-1 md:gap-2">
                 <div className="flex-1 min-w-0">
                     <Card
                         title="Unweighted GPA"
@@ -219,7 +219,7 @@ export default function Calculator({ params }: { params: string }) {
                     />
                 </div>
             </div>
-            <div className="py-4">
+            <div className="py-2">
                 {studentData ? <AAccordion student={studentData} onStudentUpdate={updateStudentData} saveStudentUpdate={saveStudentT0DB} gradeScales={gradeScales} /> : <p>Loading student data...</p>}
             </div>
             <div>
