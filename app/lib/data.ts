@@ -118,39 +118,139 @@ export async function saveSettings(settings: Settings[], studentId: string) {
   }
 }
 
-// Function to get a student's data including semesters and courses
-export async function getStudentData(id: string) {
+import { Student, Semester, Course } from './interfaces'; // Update the path as needed
+
+export async function getStudentData(id: string): Promise<Student> {
   try {
-    // Fetching student's basic data
-    const studentResponse = await fetch(`${apiEndpoint}/${id}`, {   headers: authHeaders});
-    if (!studentResponse.ok) {
-      throw new Error(`Error: ${studentResponse.status}`);
-    }
-    const studentData = await studentResponse.json();
+    // Mock data for a student
+    const studentData: Student = {
+      studentId: Number(id),
+      studentName: "John Doe",
+      studentEmail: "john.doe@example.com",
+      studentPassword: "securepassword",
+      studentWeightedGPA: 3.8,
+      studentUnweightedGPA: 3.5,
+      semester: [
+        {
+          semesterId: 1,
+          semesterName: "Fall 2023",
+          semUnweightedGPA: 3.6,
+          semWeightedGPA: 3.9,
+          course: [
+            { 
+              courseId: 1, 
+              courseName: "Mathematics 101", 
+              courseGrade: "A", 
+              courseCredit: 3, 
+              courseType: "Core", 
+              courseSemester: null 
+            },
+            { 
+              courseId: 2, 
+              courseName: "Physics 101", 
+              courseGrade: "B", 
+              courseCredit: 3, 
+              courseType: "Core", 
+              courseSemester: null 
+            },
+            { 
+              courseId: 3, 
+              courseName: "Chemistry 101", 
+              courseGrade: "A", 
+              courseCredit: 3, 
+              courseType: "Core", 
+              courseSemester: null 
+            }
+          ],
+          semesterStudent: null
+        },
+        {
+          semesterId: 2,
+          semesterName: "Spring 2024",
+          semUnweightedGPA: 3.7,
+          semWeightedGPA: 4.0,
+          course: [
+            { 
+              courseId: 4, 
+              courseName: "Biology 102", 
+              courseGrade: "A", 
+              courseCredit: 3, 
+              courseType: "Core", 
+              courseSemester: null 
+            },
+            { 
+              courseId: 5, 
+              courseName: "English 102", 
+              courseGrade: "B", 
+              courseCredit: 3, 
+              courseType: "Core", 
+              courseSemester: null 
+            },
+            { 
+              courseId: 6, 
+              courseName: "History 102", 
+              courseGrade: "A", 
+              courseCredit: 3, 
+              courseType: "Core", 
+              courseSemester: null 
+            }
+          ],
+          semesterStudent: null
+        }
+      ]
+    };
 
-    // Fetching semesters for the student
-    const semesterResponse = await fetch(`${apiEndpoint}/${id}/semesters`, {   headers: authHeaders});
-    if (!semesterResponse.ok) {
-      throw new Error(`Error: ${semesterResponse.status}`);
-    }
-    const semesterData = await semesterResponse.json();
-    studentData.semester = semesterData;
-
-    // Fetching courses for each semester
-    for (const semester of semesterData) {
-      const courseResponse = await fetch(`${apiEndpoint}/${id}/semesters/${semester.semesterId}/courses`, {   headers: authHeaders});
-      if (!courseResponse.ok) {
-        throw new Error(`Error: ${courseResponse.status}`);
-      }
-      semester.course = await courseResponse.json();
-    }
+    // Link courses to their respective semesters
+    studentData.semester.forEach(semester => {
+      semester.course.forEach(course => {
+        course.courseSemester = semester;
+      });
+      semester.semesterStudent = studentData;
+    });
 
     return studentData;
   } catch (error) {
-    // Error handling for fetch failure
-    console.error('Fetch error:', error);
+    // Error handling for mock data fetch failure
+    console.error('Mock data fetch error:', error);
+    throw error;
   }
 }
+
+
+
+// Function to get a student's data including semesters and courses
+// export async function getStudentData(id: string) {
+//   try {
+//     // Fetching student's basic data
+//     const studentResponse = await fetch(`${apiEndpoint}/${id}`, {   headers: authHeaders});
+//     if (!studentResponse.ok) {
+//       throw new Error(`Error: ${studentResponse.status}`);
+//     }
+//     const studentData = await studentResponse.json();
+
+//     // Fetching semesters for the student
+//     const semesterResponse = await fetch(`${apiEndpoint}/${id}/semesters`, {   headers: authHeaders});
+//     if (!semesterResponse.ok) {
+//       throw new Error(`Error: ${semesterResponse.status}`);
+//     }
+//     const semesterData = await semesterResponse.json();
+//     studentData.semester = semesterData;
+
+//     // Fetching courses for each semester
+//     for (const semester of semesterData) {
+//       const courseResponse = await fetch(`${apiEndpoint}/${id}/semesters/${semester.semesterId}/courses`, {   headers: authHeaders});
+//       if (!courseResponse.ok) {
+//         throw new Error(`Error: ${courseResponse.status}`);
+//       }
+//       semester.course = await courseResponse.json();
+//     }
+
+//     return studentData;
+//   } catch (error) {
+//     // Error handling for fetch failure
+//     console.error('Fetch error:', error);
+//   }
+// }
 
 // Function to save a student's data including semesters and courses
 export async function saveStudentData(student: Student) {

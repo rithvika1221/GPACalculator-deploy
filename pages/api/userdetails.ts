@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/react';
+//npmimport { getSession } from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type Data = {

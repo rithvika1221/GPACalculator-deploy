@@ -18,12 +18,7 @@ export default function Page({}) {
           >
             <strong>Welcome to GPA Calculator</strong> 
           </p>
-          <Link
-            href="/login"
-            className="flex items-center gap-5 self-start text-blue-600 rounded-lg bg-gradient-to-b px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-300 md:text-base"
-          >
-            <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
-          </Link>
+        
           <Link
             href="/signup"
             className="flex items-center gap-5 self-start text-blue-600 rounded-lg bg-gradient-to-b px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-300 md:text-base"

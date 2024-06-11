@@ -1,5 +1,5 @@
 import Logo from '../ui/acme-logo';
-import { auth, signOut } from '@/auth'; // Authentication utilities
+
 import { Link } from '@nextui-org/react'; // Next UI Link component
 import { HomeIcon, InformationCircleIcon, Cog8ToothIcon, PowerIcon } from '@heroicons/react/24/outline'; // Heroicons for UI elements
 import { lusitana } from '../ui/fonts'; // Custom font
@@ -7,7 +7,7 @@ import { lusitana } from '../ui/fonts'; // Custom font
 // Layout component with children props for nested content
 // This component define all the navigation links
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const { user } = await auth(); // Fetch user data using auth
+
 
   return (
     <>
@@ -16,7 +16,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
           <div className='flex justify-start md:flex-1 py-2 md:py-3'>
             <Logo />
           </div>
-          <div className='text-3xl py-2 md:py-0 flex justify-center md:flex-1 items-center'>Welcome: {user.name}</div>
+          <div className='text-3xl py-2 md:py-0 flex justify-center md:flex-1 items-center'>Welcome: Sayesha</div>
           <div className='flex flex-wrap md:flex-nowrap gap-2 md:gap-4 justify-end md:flex-1'>
             {/* <Link
               key='GpaCalculator'
@@ -27,7 +27,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             </Link> */}
             <Link
               key='GpaCalculator'
-              href={`/gpacalculator/${user.id}`}
+              href={`/gpacalculator/1`}
               className='flex items-center gap-2 text-theme-one1 hover:underline'>
               <HomeIcon className="w-6" />
               <p>Calculator</p>
@@ -48,7 +48,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             </Link> */}
             <Link
               key='Settings'
-              href={`/gpacalculator/${user.id}/settings`}
+              href={`/gpacalculator/1/settings`}
               className='flex items-center gap-2 text-theme-one1 hover:underline'>
               <Cog8ToothIcon className="w-6" />
               <p>Settings</p>
@@ -63,7 +63,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             <form
               action={async () => {
                 'use server';
-                await signOut();
+             //   await signOut();
               }}
               className='w-full md:w-auto'>
               <button
