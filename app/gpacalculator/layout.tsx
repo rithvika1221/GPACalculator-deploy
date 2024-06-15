@@ -1,5 +1,4 @@
 import Logo from '../ui/acme-logo';
-
 import { Link } from '@nextui-org/react'; // Next UI Link component
 import { HomeIcon, InformationCircleIcon, Cog8ToothIcon, PowerIcon } from '@heroicons/react/24/outline'; // Heroicons for UI elements
 import { lusitana } from '../ui/fonts'; // Custom font
@@ -17,7 +16,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             <Logo />
           </div>
           <div className='text-3xl py-2 md:py-0 flex justify-center md:flex-1 items-center'>Welcome: Sayesha</div>
-          <div className='flex flex-wrap md:flex-nowrap gap-2 md:gap-4 justify-end md:flex-1'>
+          <div className='flex flex-wrap flex-col md:flex-row md:flex-nowrap gap-2 md:gap-4 justify-end md:flex-1'>
             {/* <Link
               key='GpaCalculator'
               href={`/gpacalculator/${user.id}`}
@@ -32,20 +31,6 @@ export default async function Layout({ children }: { children: React.ReactNode }
               <HomeIcon className="w-6" />
               <p>Calculator</p>
             </Link>
-            {/* <Link
-              key='Settings'
-              href={`/gpacalculator/${user.id}/settings`}
-              className='flex w-full md:w-auto h-[36px] items-center justify-center gap-2 rounded-md bg-custom-green p-3 text-sm font-medium hover:bg-blue-100 hover:text-blue-600'>
-              <Cog8ToothIcon className="w-6" />
-              <p>Settings</p>
-            </Link>
-            <Link
-              key='Help'
-              href='/gpacalculator/help'
-              className='flex w-full md:w-auto h-[36px] items-center justify-center gap-2 rounded-md bg-custom-green p-3 text-sm font-medium hover:bg-blue-100 hover:text-blue-600'>
-              <InformationCircleIcon className="w-6" />
-              <p>Help</p>
-            </Link> */}
             <Link
               key='Settings'
               href={`/gpacalculator/1/settings`}
@@ -63,7 +48,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             <form
               action={async () => {
                 'use server';
-             //   await signOut();
+                await signOut();
               }}
               className='w-full md:w-auto'>
               <button
