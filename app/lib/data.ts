@@ -125,8 +125,8 @@ export async function getStudentData(id: string): Promise<Student> {
     // Mock data for a student
     const studentData: Student = {
       studentId: Number(id),
-      studentName: "John Doe",
-      studentEmail: "john.doe@example.com",
+      studentName: "Sayesha",
+      studentEmail: "sayesha@test.com",
       studentPassword: "securepassword",
       studentWeightedGPA: 3.8,
       studentUnweightedGPA: 3.5,

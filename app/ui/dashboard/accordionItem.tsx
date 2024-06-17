@@ -136,7 +136,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ settings, semester, semes
 
 
   return (
-    <div className="accordion-item mx-2 sm:mx-5 my-2 border-line:2px">
+    <div className="accordion-item mx-2 sm:mx-5 my-2 border-line:2px ">
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="flex justify-between items-center border-b-2 border-gray-200 py-0">
