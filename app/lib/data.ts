@@ -128,8 +128,8 @@ export async function getStudentData(id: string): Promise<Student> {
       studentName: "Sayesha",
       studentEmail: "sayesha@test.com",
       studentPassword: "securepassword",
-      studentWeightedGPA: 3.50,
-      studentUnweightedGPA: 3.83,
+      studentWeightedGPA: 3.67,
+      studentUnweightedGPA: 3.33,
       semester: [
         {
           semesterId: 1,
