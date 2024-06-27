@@ -128,37 +128,37 @@ export async function getStudentData(id: string): Promise<Student> {
       studentName: "Sayesha",
       studentEmail: "sayesha@test.com",
       studentPassword: "securepassword",
-      studentWeightedGPA: 3.8,
-      studentUnweightedGPA: 3.5,
+      studentWeightedGPA: 3.50,
+      studentUnweightedGPA: 3.83,
       semester: [
         {
           semesterId: 1,
           semesterName: "Fall 2023",
-          semUnweightedGPA: 3.6,
-          semWeightedGPA: 3.9,
+          semUnweightedGPA: 3.67,
+          semWeightedGPA: 4.0,
           course: [
             { 
               courseId: 1, 
-              courseName: "Mathematics 101", 
+              courseName: "Math", 
               courseGrade: "A", 
-              courseCredit: 3, 
-              courseType: "Core", 
+              courseCredit: 0.5, 
+              courseType: "AP", 
               courseSemester: null 
             },
             { 
               courseId: 2, 
-              courseName: "Physics 101", 
-              courseGrade: "B", 
-              courseCredit: 3, 
-              courseType: "Core", 
+              courseName: "English", 
+              courseGrade: "A", 
+              courseCredit: 0.5, 
+              courseType: "Regular", 
               courseSemester: null 
             },
             { 
               courseId: 3, 
-              courseName: "Chemistry 101", 
-              courseGrade: "A", 
-              courseCredit: 3, 
-              courseType: "Core", 
+              courseName: "Spanish", 
+              courseGrade: "B", 
+              courseCredit: 0.5, 
+              courseType: "Regular", 
               courseSemester: null 
             }
           ],
@@ -167,31 +167,31 @@ export async function getStudentData(id: string): Promise<Student> {
         {
           semesterId: 2,
           semesterName: "Spring 2024",
-          semUnweightedGPA: 3.7,
-          semWeightedGPA: 4.0,
+          semUnweightedGPA: 3.33,
+          semWeightedGPA: 3.67,
           course: [
             { 
               courseId: 4, 
-              courseName: "Biology 102", 
+              courseName: "Math", 
               courseGrade: "A", 
-              courseCredit: 3, 
-              courseType: "Core", 
+              courseCredit: 0.5, 
+              courseType: "AP", 
               courseSemester: null 
             },
             { 
               courseId: 5, 
-              courseName: "English 102", 
-              courseGrade: "B", 
-              courseCredit: 3, 
-              courseType: "Core", 
+              courseName: "English", 
+              courseGrade: "A", 
+              courseCredit: 0.5, 
+              courseType: "Regular", 
               courseSemester: null 
             },
             { 
               courseId: 6, 
-              courseName: "History 102", 
-              courseGrade: "A", 
-              courseCredit: 3, 
-              courseType: "Core", 
+              courseName: "Spanish", 
+              courseGrade: "C", 
+              courseCredit: 0.5, 
+              courseType: "Regular", 
               courseSemester: null 
             }
           ],
