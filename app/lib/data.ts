@@ -156,7 +156,7 @@ export async function getStudentData(id: string): Promise<Student> {
             { 
               courseId: 3, 
               courseName: "Spanish", 
-              courseGrade: "B", 
+              courseGrade: "C", 
               courseCredit: 1, 
               courseType: "Regular", 
               courseSemester: null 
