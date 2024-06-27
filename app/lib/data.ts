@@ -141,7 +141,7 @@ export async function getStudentData(id: string): Promise<Student> {
               courseId: 1, 
               courseName: "Math", 
               courseGrade: "A", 
-              courseCredit: 0.5, 
+              courseCredit: 1, 
               courseType: "AP", 
               courseSemester: null 
             },
@@ -149,7 +149,7 @@ export async function getStudentData(id: string): Promise<Student> {
               courseId: 2, 
               courseName: "English", 
               courseGrade: "A", 
-              courseCredit: 0.5, 
+              courseCredit: 1, 
               courseType: "Regular", 
               courseSemester: null 
             },
@@ -157,7 +157,7 @@ export async function getStudentData(id: string): Promise<Student> {
               courseId: 3, 
               courseName: "Spanish", 
               courseGrade: "B", 
-              courseCredit: 0.5, 
+              courseCredit: 1, 
               courseType: "Regular", 
               courseSemester: null 
             }
@@ -174,7 +174,7 @@ export async function getStudentData(id: string): Promise<Student> {
               courseId: 4, 
               courseName: "Math", 
               courseGrade: "A", 
-              courseCredit: 0.5, 
+              courseCredit: 1, 
               courseType: "AP", 
               courseSemester: null 
             },
@@ -182,7 +182,7 @@ export async function getStudentData(id: string): Promise<Student> {
               courseId: 5, 
               courseName: "English", 
               courseGrade: "A", 
-              courseCredit: 0.5, 
+              courseCredit: 1, 
               courseType: "Regular", 
               courseSemester: null 
             },
@@ -190,7 +190,7 @@ export async function getStudentData(id: string): Promise<Student> {
               courseId: 6, 
               courseName: "Spanish", 
               courseGrade: "C", 
-              courseCredit: 0.5, 
+              courseCredit: 1, 
               courseType: "Regular", 
               courseSemester: null 
             }
